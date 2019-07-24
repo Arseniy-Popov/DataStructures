@@ -2,12 +2,6 @@ from PriorityQueue.PriorityQueue import PriorityQueueBase
 
 
 class Heap(PriorityQueueBase):
-    def __init__(self):
-        self.data = []
-
-    def __len__(self):
-        return len(self.data)
-
     def _checkIndex(self, index):
         if index > len(self) - 1:
             return None
@@ -60,6 +54,12 @@ class Heap(PriorityQueueBase):
                 self._downHeap(index=right)
 
     # PUBLIC METHODS
+
+    def __init__(self):
+        self.data = []
+
+    def __len__(self):
+        return len(self.data)
 
     def add(self, item, priority):
         self.data.append(self.Item(item, priority))
