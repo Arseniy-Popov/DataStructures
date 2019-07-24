@@ -1,12 +1,37 @@
 from PositionalList.PositionalList import PositionalList
+from abc import ABC, abstractmethod
 
 
-class PriorityQueue:
+class PriorityQueueBase(ABC):
     class Item:
         def __init__(self, item, priority):
             self.item = item
             self.priority = priority
 
+        def __lt__(self, other):
+            return self.priority < other.priority
+        
+        def __le__(self, other):
+            return self.priority <= other.priority
+        
+    @abstractmethod
+    def __len__(self):
+        pass
+
+    @abstractmethod
+    def add(self):
+        pass
+
+    @abstractmethod
+    def min(self):
+        pass
+
+    @abstractmethod
+    def removeMin(self):
+        pass
+
+
+class PriorityQueue(PriorityQueueBase):
     def __init__(self, sorted=False):
         self.data = PositionalList()
         self.sorted = sorted
