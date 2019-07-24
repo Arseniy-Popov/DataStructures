@@ -12,12 +12,12 @@ class Heap(PriorityQueueBase):
         if index > len(self) - 1:
             return None
         else:
-            return index 
-        
+            return index
+
     def _left(self, index):
         result = 2 * index + 1
         return self._checkIndex(result)
-        
+
     def _right(self, index):
         result = 2 * index + 2
         return self._checkIndex(result)
@@ -31,7 +31,7 @@ class Heap(PriorityQueueBase):
     def _upHeap(self, index=None):
         """ Recursively swap items from leaf to root. """
         if index is None:
-            index = len(self) - 1 
+            index = len(self) - 1
         if self.data[self._parent(index)] > self.data[index] and index != 0:
             self._swap(self._parent(index), index)
             self._upHeap(index=self._parent(index))
@@ -40,8 +40,25 @@ class Heap(PriorityQueueBase):
         """ Recursively swap items from root to leaf. """
         if index is None:
             index = 0
-        if 
-        
+        left, right = self._left(index), self._right(index)
+        if left is not None and right is not None:
+            if self.data[left] <= self.data[right]:
+                if self.data[left] < self.data[index]:
+                    self._swap(left, index)
+                    self._downHeap(index=left)
+            else:
+                if self.data[right] < self.data[index]:
+                    self._swap(right, index)
+                    self._downHeap(index=right)
+        elif left is not None:
+            if self.data[left] < self.data[index]:
+                self._swap(left, index)
+                self._downHeap(index=left)
+        elif right is not None:
+            if self.data[right] < self.data[index]:
+                self._swap(right, index)
+                self._downHeap(index=right)
+
     # PUBLIC METHODS
 
     def add(self, item, priority):
@@ -55,6 +72,9 @@ class Heap(PriorityQueueBase):
 
     def removeMin(self):
         min = self.min()
-        self.data[0] = self.data.pop()
+        if not len(self) == 1:
+            self.data[0] = self.data.pop()
+        else:
+            self.data.pop()
         self._downHeap()
         return min

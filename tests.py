@@ -26,7 +26,14 @@ class test_heap(test_priotityQueue):
     def test_priorities(self):
         print(self.priorities(self.queue))
 
-    def test_adding(self):
+    def test_removeMin_multiple(self):
+        result = []
+        while len(self.queue) > 0:
+            result.append(self.queue.removeMin()[1])
+            print(self.priorities(self.queue))
+        self.assertEqual(result, [1, 2, 3, 5, 7, 15, 20])
+
+    def test_buildup(self):
         self.queue2 = Heap()
         tuples = [
             ("s", 5),
