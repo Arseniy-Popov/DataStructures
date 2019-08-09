@@ -93,7 +93,7 @@ class Tree(ABC):
         else:
             return 1 + max(self.heigth(p) for p in self.children(position))
 
-    def graph(self, filename=None, directory="..Output"):
+    def graph(self, filename=None, directory="Output"):
         """Renders a graph using the Graphviz module."""
         graph = Digraph()
         graph.attr("node", shape="circle")
