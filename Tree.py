@@ -7,7 +7,6 @@ class Tree(ABC):
     class Position:
         def __init__(self, node, valid=True):
             self.node = node
-            self.valid = valid
 
         def __eq__(self, other):
             return self.node == other.node
@@ -63,6 +62,14 @@ class Tree(ABC):
             for i in self.children(result):
                 queue.append(i)
 
+    def traverseEuler(self, start=None):
+        if start is None:
+            start = self.root()
+        yield start
+        for i in self.children(start):
+            yield from self.traverseEuler(i)
+            yield start
+
     def isEmpty(self):
         return len(self) == 0
 
@@ -86,7 +93,7 @@ class Tree(ABC):
         else:
             return 1 + max(self.heigth(p) for p in self.children(position))
 
-    def graph(self):
+    def graph(self, filename=None, directory="..Output"):
         """Renders a graph using the Graphviz module."""
         graph = Digraph()
         graph.attr("node", shape="circle")
@@ -95,7 +102,10 @@ class Tree(ABC):
         for position in self.positions():
             for child in self.children(position):
                 graph.edge(str(id(position.node)), str(id(child.node)))
-        graph.render()
+        if filename is None:
+            graph.render(filename="tree", directory=directory)
+        else:
+            graph.render(filename=filename, directory=directory)
 
 
 class BinaryTree(Tree):
@@ -206,55 +216,3 @@ class LinkedBinaryTree(BinaryTree):
             return self.Position(position.node.right)
         else:
             return None
-
-
-def test():
-    tree = LinkedBinaryTree()
-    a = tree.addRoot("a")
-    c = tree.addLeft(a, "c")
-    d = tree.addRight(a, "d")
-    tree.addRight(c, "f")
-    g = tree.addLeft(c, "g")
-    tree.addRight(d, "f")
-    tree.addLeft(d, "g")
-    tree.addLeft(g, "u")
-    yield "traversals:"
-    yield f"   preorder: \n      {' '.join(str(i.item()) for i in tree.traversePreorder())}"
-    yield f"   postorder: \n      {' '.join(str(i.item()) for i in tree.traversePostorder())}"
-    yield f"   inorder: \n      {' '.join(str(i.item()) for i in tree.traverseInorder())}"
-    yield f"   DFS: \n      {' '.join(str(i.item()) for i in tree.traverseDFS())}"
-    yield f"positions: {' '.join(str(i.item()) for i in tree.positions())}"
-    yield f"heigth: {tree.heigth()}"
-    yield f"len: {len(tree)}"
-    tree.graph()
-
-
-def testFilesystem():
-    """leafs are files w/ file size and non-leafes are folders"""
-    tree = LinkedBinaryTree()
-    a = tree.addRoot(0)
-    c = tree.addLeft(a, 0)
-    d = tree.addRight(a, 0)
-    tree.addRight(c, 5)
-    g = tree.addLeft(c, 0)
-    tree.addRight(d, 2)
-    tree.addLeft(d, 4)
-    tree.addLeft(g, 2)
-
-    def sizeFilesystem(start=None):
-        if start is None:
-            start = tree.root()
-        subtotal = 0
-        for i in tree.children(start):
-            subtotal += sizeFilesystem(start=i)
-        subtotal += start.item()
-        start.node.item = subtotal
-        return subtotal
-
-    yield sizeFilesystem()
-    tree.graph()
-
-
-if __name__ == "__main__":
-    for i in testFilesystem():
-        print(i)

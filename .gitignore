@@ -1,2 +1,4 @@
 *.pdf
 *.gv
+__pycache__/
+tests/Output
