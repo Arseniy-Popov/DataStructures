@@ -29,13 +29,13 @@ class TestListMap(unittest.TestCase):
 
     def test_keys(self):
         self.assertEqual(list(self.map.keys()), ["a", "b", "c"])
-        
+
     def test_items(self):
-        print(f'\nitems: {list(self.map.items())}')
+        print(f"\nitems: {list(self.map.items())}")
 
     def test(self):
         self.test = HashMapBase()
-        
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
