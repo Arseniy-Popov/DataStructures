@@ -16,7 +16,6 @@ class ListMap(MapBase):
         for item in self._data:
             if item._key == key:
                 item._value = value
-                contains = True
                 return
         self._data.append(self._Item(key, value))
     
@@ -30,6 +29,5 @@ class ListMap(MapBase):
         for index, item in enumerate(self._data):
             if item._key == key:
                 del self._data[index]
-                contains = True
                 return
         raise KeyError

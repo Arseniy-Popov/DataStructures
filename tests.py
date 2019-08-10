@@ -1,6 +1,7 @@
 import unittest
 
 
+from Map.MapBase import HashMapBase
 from Map.ListMap import ListMap
 
 
@@ -26,6 +27,15 @@ class TestListMap(unittest.TestCase):
     def test_len(self):
         self.assertEqual(len(self.map), 3)
 
+    def test_keys(self):
+        self.assertEqual(list(self.map.keys()), ["a", "b", "c"])
+        
+    def test_items(self):
+        print(f'\nitems: {list(self.map.items())}')
+
+    def test(self):
+        self.test = HashMapBase()
+        
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
