@@ -20,15 +20,34 @@ class HashMapBase(MapBase):
         self._array = [None] * 10
         self._arrayCapacity = len(self._array)
         self._nItems = 0
+        self._maxLoadFactor = 0.9
 
-    def loadFactor(self):
+    def _loadFactor(self):
         return self._nItems / self._arrayCapacity
 
-    def compression(self, hash):
-        return hash % self._arrayCapacity
+    def _compressionFunc(self, key):
+        return hash(key) % self._arrayCapacity
+
+    def _resize(self):
+        self._resizedArray = [None] * 2 * self._arrayCapacity
+        for key, value in self.items():
+            self._set_bucket(key, value, array=self._resizedArray)
+        self._array, self._arrayCapacity = self._resizedArray, len(self._resizedArray) 
+
+    def __setitem__(self, key, value):
+        self._nItems += 1
+        if self._loadFactor() >= self._maxLoadFactor:
+            self._resize()
+        self._set_bucket(key, value, array=self._array)
+    
+    def __getitem__(self, key):
+        self._get_bucket(key)
+    
+    def __delitem__(self, key):
+        self._del_bucket(key)
 
     @abstractmethod
-    def _insert_bucket(self, key):
+    def _set_bucket(self, key, value, array=None):
         pass
 
     @abstractmethod
