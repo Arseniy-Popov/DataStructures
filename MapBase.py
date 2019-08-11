@@ -32,17 +32,17 @@ class HashMapBase(MapBase):
         self._resizedArray = [None] * 2 * self._arrayCapacity
         for key, value in self.items():
             self._set_bucket(key, value, array=self._resizedArray)
-        self._array, self._arrayCapacity = self._resizedArray, len(self._resizedArray) 
+        self._array, self._arrayCapacity = self._resizedArray, len(self._resizedArray)
 
     def __setitem__(self, key, value):
         self._nItems += 1
         if self._loadFactor() >= self._maxLoadFactor:
             self._resize()
         self._set_bucket(key, value, array=self._array)
-    
+
     def __getitem__(self, key):
         self._get_bucket(key)
-    
+
     def __delitem__(self, key):
         self._del_bucket(key)
 
