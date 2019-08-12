@@ -14,6 +14,9 @@ class MapBase(MutableMapping):
         def __lt__(self, other):
             return self._key < other._key
 
+        def __repr__(self):
+            return f"({self._key}, {self._value})"
+            
 
 class HashMapBase(MapBase):
     def __init__(self):
@@ -22,6 +25,9 @@ class HashMapBase(MapBase):
         self._nItems = 0
         self._maxLoadFactor = 0.9
 
+    def __len__(self):
+        return self._nItems
+    
     def _loadFactor(self):
         return self._nItems / self._arrayCapacity
 
