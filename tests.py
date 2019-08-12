@@ -9,7 +9,7 @@ from Map.Map_SeparateChaining import Map_SeparateChaining
 class TestMap_List(unittest.TestCase):
     def initMap(self):
         self.map = ListMap()
-    
+
     def setUp(self):
         self.initMap()
         self.keys = "abcdefghijklm"

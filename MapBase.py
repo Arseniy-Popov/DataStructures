@@ -16,7 +16,7 @@ class MapBase(MutableMapping):
 
         def __repr__(self):
             return f"({self._key}, {self._value})"
-            
+
 
 class HashMapBase(MapBase):
     def __init__(self):
@@ -26,7 +26,7 @@ class HashMapBase(MapBase):
 
     def __len__(self):
         return self._nItems
-    
+
     def _loadFactor(self):
         return self._nItems / len(self._array)
 
