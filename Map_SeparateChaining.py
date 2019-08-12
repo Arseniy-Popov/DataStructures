@@ -9,7 +9,9 @@ class Map_SeparateChaining(HashMapBase):
 					yield item._key
 	
 	def _set_bucket(self, key, value, array=None):
-		index = self._compressionFunc(key)
+		if array is None:
+			array = self._array
+		index = self._compressionFunc(key, array=array)
 		if array[index] is None:
 			array[index] = [self._Item(key, value)]
 		else:
@@ -25,7 +27,7 @@ class Map_SeparateChaining(HashMapBase):
 			for item in self._array[index]:
 				if item._key == key:
 					return item._value
-		raise KeyError
+		raise KeyError(key, index, self._array[index])
 	
 	def _del_bucket(self, key):
 		index = self._compressionFunc(key)

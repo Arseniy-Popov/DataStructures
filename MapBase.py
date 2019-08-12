@@ -21,7 +21,6 @@ class MapBase(MutableMapping):
 class HashMapBase(MapBase):
     def __init__(self):
         self._array = [None] * 10
-        self._arrayCapacity = len(self._array)
         self._nItems = 0
         self._maxLoadFactor = 0.9
 
@@ -29,25 +28,27 @@ class HashMapBase(MapBase):
         return self._nItems
     
     def _loadFactor(self):
-        return self._nItems / self._arrayCapacity
+        return self._nItems / len(self._array)
 
-    def _compressionFunc(self, key):
-        return hash(key) % self._arrayCapacity
+    def _compressionFunc(self, key, array=None):
+        if array is None:
+            array = self._array
+        return hash(key) % len(array)
 
     def _resize(self):
-        self._resizedArray = [None] * 2 * self._arrayCapacity
+        self._resizedArray = [None] * 2 * len(self._array)
         for key, value in self.items():
             self._set_bucket(key, value, array=self._resizedArray)
-        self._array, self._arrayCapacity = self._resizedArray, len(self._resizedArray)
+        self._array = self._resizedArray
 
     def __setitem__(self, key, value):
         self._nItems += 1
         if self._loadFactor() >= self._maxLoadFactor:
             self._resize()
-        self._set_bucket(key, value, array=self._array)
+        self._set_bucket(key, value)
 
     def __getitem__(self, key):
-        self._get_bucket(key)
+        return self._get_bucket(key)
 
     def __delitem__(self, key):
         self._del_bucket(key)
