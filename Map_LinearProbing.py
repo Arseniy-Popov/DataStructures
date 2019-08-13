@@ -36,11 +36,11 @@ class Map_LinearProbing(HashMapBase):
         index = self._findIndex(key)
         return self._array[index]._value
 
+    def _del_bucket(self, key):
+        index = self._findIndex(key)
+        self._array[index] = self._Empty()
+
     def __iter__(self):
         for item in self._array:
             if item is not None and not isinstance(item, self._Empty):
                 yield item._key
-
-    def _del_bucket(self, key):
-        index = self._findIndex(key)
-        self._array[index] = self._Empty()
