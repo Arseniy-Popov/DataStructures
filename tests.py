@@ -53,11 +53,11 @@ class TestMap_Hash_LinearProbing(TestMap_Hash_SeparateChaining):
 
 
 if __name__ == "__main__":
-    tests = []
-    # repeat line for each class
-    tests.append(
-        unittest.TestLoader().loadTestsFromTestCase(TestMap_Hash_LinearProbing)
-    )
-    suite = unittest.TestSuite(tests)
-    unittest.TextTestRunner(verbosity=2).run(suite)
-    # unittest.main(verbosity=2)
+    # tests = []
+    # # repeat line for each class
+    # tests.append(
+    #     unittest.TestLoader().loadTestsFromTestCase(TestMap_Hash_LinearProbing)
+    # )
+    # suite = unittest.TestSuite(tests)
+    # unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest.main(verbosity=2)
