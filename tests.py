@@ -33,6 +33,8 @@ class TestMap_List(unittest.TestCase):
             del self.map[key]
         self.assertRaises(KeyError, self.map.__getitem__, "c")
         self.assertEqual(set([key for key in self.map]), set(self.remaining_Keys))
+        for key in self.remaining_Keys:
+            self.assertEqual(self.map[key], self.initial_keys.index(key))
 
     def test_iter(self):
         self.assertEqual(set([key for key in self.map]), set(self.initial_keys))
