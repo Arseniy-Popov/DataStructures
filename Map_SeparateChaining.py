@@ -27,13 +27,13 @@ class Map_SeparateChaining(HashMapBase):
             for item in self._array[index]:
                 if item._key == key:
                     return item._value
-        raise KeyError(key, index, self._array[index])
+        raise KeyError(key)
 
     def _del_bucket(self, key):
         index = self._compressionFunc(key)
         if self._array[index] is not None:
-            for item in self._array[index]:
+            for innerIndex, item in enumerate(self._array[index]):
                 if item._key == key:
-                    self._array[index] = None
+                    del self._array[index][innerIndex]
                     return
         raise KeyError

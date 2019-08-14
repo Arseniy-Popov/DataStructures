@@ -12,31 +12,36 @@ class TestMap_List(unittest.TestCase):
 
     def setUp(self):
         self.initMap()
-        self.keys = "abcdefghijklm"
-        for index, letter in enumerate(self.keys):
+        self.initial_keys = "abcdefghijklm"
+        for index, letter in enumerate(self.initial_keys):
             self.map[letter] = index
 
     def test_set_get(self):
-        self.assertEqual(self.map["a"], 0)
+        for key in self.initial_keys:
+            self.assertEqual(self.map[key], self.initial_keys.index(key))
         self.map["d"] = 4
+        self.assertEqual(self.map["a"], 0)
         self.assertEqual(self.map["d"], 4)
         self.assertEqual(self.map["m"], 12)
 
     def test_del(self):
-        del self.map["c"]
+        self.deleted_Keys = "acfkm"
+        self.remaining_Keys = "".join(
+            [i for i in self.initial_keys if i not in self.deleted_Keys]
+        )
+        for key in self.deleted_Keys:
+            del self.map[key]
         self.assertRaises(KeyError, self.map.__getitem__, "c")
+        self.assertEqual(set([key for key in self.map]), set(self.remaining_Keys))
 
     def test_iter(self):
-        self.assertEqual(set([key for key in self.map]), set(self.keys))
+        self.assertEqual(set([key for key in self.map]), set(self.initial_keys))
 
     def test_len(self):
         self.assertEqual(len(self.map), 13)
 
-    def test_keys(self):
-        self.assertEqual(set(self.map.keys()), set(self.keys))
-
     def test_items(self):
-        print(f"\n items: {list(self.map.items())}")
+        print(f"\n items:\n {list(self.map.items())}")
 
 
 class TestMap_Hash_SeparateChaining(TestMap_List):
@@ -44,7 +49,7 @@ class TestMap_Hash_SeparateChaining(TestMap_List):
         self.map = Map_SeparateChaining()
 
     def test_container(self):
-        print(f"\n {self.map._array}")
+        print(f"\n container:\n {self.map._array}")
 
 
 class TestMap_Hash_LinearProbing(TestMap_Hash_SeparateChaining):
