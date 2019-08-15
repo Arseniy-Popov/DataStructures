@@ -8,18 +8,18 @@ class Map_SeparateChaining(HashMapBase):
                 for item in a:
                     yield item._key
 
-    def _set_bucket(self, key, value, array=None):
-        if array is None:
-            array = self._array
-        index = self._compressionFunc(key, array=array)
-        if array[index] is None:
-            array[index] = [self._Item(key, value)]
+    def _set_bucket(self, key, value):
+        index = self._compressionFunc(key)
+        if self._array[index] is None:
+            self._array[index] = [self._Item(key, value)]
+            self._nItems += 1
         else:
-            for item in array[index]:
+            for item in self._array[index]:
                 if item._key == key:
                     item._value = value
                     return
-            array[index].append(self._Item(key, value))
+            self._array[index].append(self._Item(key, value))
+            self._nItems += 1
 
     def _get_bucket(self, key):
         index = self._compressionFunc(key)
@@ -35,5 +35,6 @@ class Map_SeparateChaining(HashMapBase):
             for innerIndex, item in enumerate(self._array[index]):
                 if item._key == key:
                     del self._array[index][innerIndex]
+                    self._nItems -= 1
                     return
         raise KeyError

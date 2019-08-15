@@ -1,4 +1,5 @@
 import unittest
+from string import ascii_letters, ascii_lowercase
 
 from Map.MapBase import HashMapBase
 from Map.ListMap import ListMap
@@ -12,35 +13,29 @@ class TestMap_List(unittest.TestCase):
 
     def setUp(self):
         self.initMap()
-        self.initial_keys = "abcdefghijklm"
+        self.initial_keys = ascii_letters
         for index, letter in enumerate(self.initial_keys):
             self.map[letter] = index
-
-    def test_set_get(self):
-        for key in self.initial_keys:
-            self.assertEqual(self.map[key], self.initial_keys.index(key))
-        self.map["d"] = 4
-        self.assertEqual(self.map["a"], 0)
-        self.assertEqual(self.map["d"], 4)
-        self.assertEqual(self.map["m"], 12)
-
-    def test_del(self):
-        self.deleted_Keys = "acfkm"
+        self.deleted_Keys = ascii_lowercase
         self.remaining_Keys = "".join(
             [i for i in self.initial_keys if i not in self.deleted_Keys]
         )
         for key in self.deleted_Keys:
             del self.map[key]
-        self.assertRaises(KeyError, self.map.__getitem__, "c")
-        self.assertEqual(set([key for key in self.map]), set(self.remaining_Keys))
         for key in self.remaining_Keys:
-            self.assertEqual(self.map[key], self.initial_keys.index(key))
+            self.map[key] = self.initial_keys.index(key) ** 2
 
-    def test_iter(self):
-        self.assertEqual(set([key for key in self.map]), set(self.initial_keys))
+    def test_set_get(self):
+        for key in self.remaining_Keys:
+            self.assertEqual(self.map[key], self.initial_keys.index(key) ** 2)
+        self.map["d"] = 4
+        self.assertEqual(self.map["d"], 4)
+
+    def test_del(self):
+        self.assertRaises(KeyError, self.map.__getitem__, "c")
 
     def test_len(self):
-        self.assertEqual(len(self.map), 13)
+        self.assertEqual(len(self.map), len(self.remaining_Keys))
 
     def test_items(self):
         print(f"\n items:\n {list(self.map.items())}")
