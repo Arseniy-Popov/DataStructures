@@ -5,6 +5,7 @@ from Map.MapBase import HashMapBase
 from Map.ListMap import ListMap
 from Map.Map_SeparateChaining import Map_SeparateChaining
 from Map.Map_LinearProbing import Map_LinearProbing
+from Map.SortedListMap import SortedListMap
 
 
 class TestMap_List(unittest.TestCase):
@@ -54,12 +55,17 @@ class TestMap_Hash_LinearProbing(TestMap_Hash_SeparateChaining):
         self.map = Map_LinearProbing()
 
 
+class TestMap_SortedListMap(TestMap_List):
+    def initMap(self):
+        self.map = SortedListMap()
+
+
 if __name__ == "__main__":
-    # tests = []
-    # # repeat line for each class
-    # tests.append(
-    #     unittest.TestLoader().loadTestsFromTestCase(TestMap_Hash_LinearProbing)
-    # )
-    # suite = unittest.TestSuite(tests)
-    # unittest.TextTestRunner(verbosity=2).run(suite)
-    unittest.main(verbosity=2)
+    tests = []
+    # repeat line for each class
+    tests.append(
+        unittest.TestLoader().loadTestsFromTestCase(TestMap_SortedListMap)
+    )
+    suite = unittest.TestSuite(tests)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+    # unittest.main(verbosity=2)
