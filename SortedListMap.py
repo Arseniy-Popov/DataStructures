@@ -4,11 +4,10 @@ from Map.MapBase import MapBase
 class SortedListMap(MapBase):
     def __init__(self):
         self._data = []
-        self._nItems = 0
     
-    def _bisectionSearch(self, key, low=None, high=None):
+    def _binarySearch(self, key, low=None, high=None):
         if low is None and high is None:
-            low, high = 0, self._nItems - 1
+            low, high = 0, len(self._data) - 1
         if high == low and self._data[low]._key != key:
             if self._data[low]._key > key:
                 return (False, low)
@@ -30,4 +29,23 @@ class SortedListMap(MapBase):
             else:
                 self._data.insert(index+1, self._Item(key, value))
         
-        
+    def __getitem__(self, key):
+        foundKey, index = self._binarySearch(key)
+        if not foundKey:
+            raise KeyError
+        else:
+            return self._data[index]._value
+    
+    def __delitem__(self, key):
+        foundKey, index = self._binarySearch(key)
+        if not foundKey:
+            raise KeyError
+        else:
+            del self._data[index]
+    
+    def __iter__(self):
+        for item in self._data:
+            yield item._value
+    
+    def __len__(self):
+        return len(self._data)
