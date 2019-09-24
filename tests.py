@@ -1,5 +1,6 @@
 import unittest
 from string import ascii_letters, ascii_lowercase
+import random
 
 from Map.MapBase import HashMapBase
 from Map.ListMap import ListMap
@@ -14,7 +15,7 @@ class TestMap_List(unittest.TestCase):
 
     def setUp(self):
         self.initMap()
-        self.initial_keys = ascii_letters
+        self.initial_keys = ascii_letters[::-1]
         for index, letter in enumerate(self.initial_keys):
             self.map[letter] = index
         self.deleted_Keys = ascii_lowercase
@@ -59,13 +60,18 @@ class TestMap_SortedListMap(TestMap_List):
     def initMap(self):
         self.map = SortedListMap()
 
+    def test_lt(self):
+        self.assertEqual(self.map.get_lt("J"), "I")
+
+    def test_le(self):
+        self.assertEqual(self.map.get_le("J"), "J")
+        self.assertEqual(self.map.get_le("a"), "Z")
+
 
 if __name__ == "__main__":
     tests = []
     # repeat line for each class
-    tests.append(
-        unittest.TestLoader().loadTestsFromTestCase(TestMap_SortedListMap)
-    )
+    tests.append(unittest.TestLoader().loadTestsFromTestCase(TestMap_SortedListMap))
     suite = unittest.TestSuite(tests)
     unittest.TextTestRunner(verbosity=2).run(suite)
     # unittest.main(verbosity=2)
