@@ -1,4 +1,4 @@
-from Tree.Tree import LinkedBinaryTree
+from DataStructures.Tree.Tree import LinkedBinaryTree
 
 
 def tOfContents(tree):

@@ -2,11 +2,11 @@ import unittest
 from string import ascii_letters, ascii_lowercase
 import random
 
-from Map.MapBase import HashMapBase
-from Map.ListMap import ListMap
-from Map.Map_SeparateChaining import Map_SeparateChaining
-from Map.Map_LinearProbing import Map_LinearProbing
-from Map.SortedListMap import SortedListMap
+from DataStructures.Map.MapBase import HashMapBase
+from DataStructures.Map.ListMap import ListMap
+from DataStructures.Map.Map_SeparateChaining import Map_SeparateChaining
+from DataStructures.Map.Map_LinearProbing import Map_LinearProbing
+from DataStructures.Map.SortedListMap import SortedListMap
 
 
 class TestMap_List(unittest.TestCase):
