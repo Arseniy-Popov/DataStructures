@@ -1,4 +1,4 @@
-from Map.MapBase import HashMapBase
+from DataStructures.Map.MapBase import HashMapBase
 
 
 class Map_SeparateChaining(HashMapBase):

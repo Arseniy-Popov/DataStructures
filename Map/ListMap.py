@@ -1,4 +1,4 @@
-from Map.MapBase import MapBase
+from DataStructures.Map.MapBase import MapBase
 
 
 class ListMap(MapBase):
