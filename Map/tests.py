@@ -15,32 +15,45 @@ class TestMap_List(unittest.TestCase):
 
     def setUp(self):
         self.initMap()
-        self.initial_keys = ascii_letters[::-1]
+        self.test_dict = {}
+        self.initial_keys = list(ascii_letters[::-1])
         for index, letter in enumerate(self.initial_keys):
-            self.map[letter] = index
-        self.deleted_Keys = ascii_lowercase
-        self.remaining_Keys = "".join(
-            [i for i in self.initial_keys if i not in self.deleted_Keys]
-        )
-        for key in self.deleted_Keys:
-            del self.map[key]
-        for key in self.remaining_Keys:
-            self.map[key] = self.initial_keys.index(key) ** 2
+            self.map[letter] = self.test_dict[letter] = index ** 2
+        # self.deleted_Keys = ascii_lowercase
+        # self.remaining_Keys = "".join(
+        #     [i for i in self.initial_keys if i not in self.deleted_Keys]
+        # )
+        # for key in self.deleted_Keys:
+        #     del self.map[key]
+        # for key in self.remaining_Keys:
+        #     self.map[key] = self.initial_keys.index(key) ** 2
+
+    def contents_match(self):
+        for key in self.test_dict.keys():
+            self.assertEqual(self.map[key], self.test_dict[key])
+
+    def display_items(self):
+        print(f"\n items:\n {list(self.map.items())}")
 
     def test_set_get(self):
-        for key in self.remaining_Keys:
-            self.assertEqual(self.map[key], self.initial_keys.index(key) ** 2)
-        self.map["d"] = 4
-        self.assertEqual(self.map["d"], 4)
+        self.contents_match()
+        for key in self.initial_keys:
+            self.map[key] = self.test_dict[key] = -self.map[key]
+        self.contents_match()
+        self.display_items()
 
     def test_del(self):
+        self.initial_keys_post_deletion = self.initial_keys
+        while len(self.map) > 1:
+            key = random.choice(self.initial_keys_post_deletion)
+            self.initial_keys_post_deletion.remove(key)
+            del self.test_dict[key]
+            del self.map[key]
+            self.contents_match()
         self.assertRaises(KeyError, self.map.__getitem__, "c")
 
     def test_len(self):
         self.assertEqual(len(self.map), len(self.remaining_Keys))
-
-    def test_items(self):
-        print(f"\n items:\n {list(self.map.items())}")
 
 
 class TestMap_Hash_SeparateChaining(TestMap_List):
@@ -71,7 +84,7 @@ class TestMap_SortedListMap(TestMap_List):
 if __name__ == "__main__":
     tests = []
     # repeat line for each class
-    tests.append(unittest.TestLoader().loadTestsFromTestCase(TestMap_SortedListMap))
+    tests.append(unittest.TestLoader().loadTestsFromTestCase(TestMap_List))
     suite = unittest.TestSuite(tests)
     unittest.TextTestRunner(verbosity=2).run(suite)
     # unittest.main(verbosity=2)
