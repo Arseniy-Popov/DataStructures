@@ -32,7 +32,7 @@ class TestMap_List(unittest.TestCase):
         for key in self.initial_keys:
             self.map[key] = self.test_dict[key] = -self.map[key]
         self.contents_match()
-        self.display_items()
+        # self.display_items()
 
     def test_del(self):
         self.initial_keys_post_deletion = self.initial_keys
@@ -52,8 +52,8 @@ class TestMap_Hash_SeparateChaining(TestMap_List):
     def initMap(self):
         self.map = Map_SeparateChaining()
 
-    def test_container(self):
-        print(f"\n container:\n {self.map._array}")
+    # def test_container(self):
+    #     print(f"\n container:\n {self.map._array}")
 
 
 class TestMap_Hash_LinearProbing(TestMap_Hash_SeparateChaining):
