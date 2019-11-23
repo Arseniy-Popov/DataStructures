@@ -19,14 +19,6 @@ class TestMap_List(unittest.TestCase):
         self.initial_keys = list(ascii_letters[::-1])
         for index, letter in enumerate(self.initial_keys):
             self.map[letter] = self.test_dict[letter] = index ** 2
-        # self.deleted_Keys = ascii_lowercase
-        # self.remaining_Keys = "".join(
-        #     [i for i in self.initial_keys if i not in self.deleted_Keys]
-        # )
-        # for key in self.deleted_Keys:
-        #     del self.map[key]
-        # for key in self.remaining_Keys:
-        #     self.map[key] = self.initial_keys.index(key) ** 2
 
     def contents_match(self):
         for key in self.test_dict.keys():
@@ -44,7 +36,7 @@ class TestMap_List(unittest.TestCase):
 
     def test_del(self):
         self.initial_keys_post_deletion = self.initial_keys
-        while len(self.map) > 1:
+        while len(self.map) > 0:
             key = random.choice(self.initial_keys_post_deletion)
             self.initial_keys_post_deletion.remove(key)
             del self.test_dict[key]
@@ -53,7 +45,7 @@ class TestMap_List(unittest.TestCase):
         self.assertRaises(KeyError, self.map.__getitem__, "c")
 
     def test_len(self):
-        self.assertEqual(len(self.map), len(self.remaining_Keys))
+        self.assertEqual(len(self.map), len(self.test_dict))
 
 
 class TestMap_Hash_SeparateChaining(TestMap_List):
@@ -78,13 +70,14 @@ class TestMap_SortedListMap(TestMap_List):
 
     def test_le(self):
         self.assertEqual(self.map.get_le("J"), "J")
+        del self.map["a"]
         self.assertEqual(self.map.get_le("a"), "Z")
 
 
 if __name__ == "__main__":
-    tests = []
-    # repeat line for each class
-    tests.append(unittest.TestLoader().loadTestsFromTestCase(TestMap_List))
-    suite = unittest.TestSuite(tests)
-    unittest.TextTestRunner(verbosity=2).run(suite)
-    # unittest.main(verbosity=2)
+    # tests = []
+    # # repeat line for each class
+    # tests.append(unittest.TestLoader().loadTestsFromTestCase(TestMap_List))
+    # suite = unittest.TestSuite(tests)
+    # unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest.main(verbosity=2)
