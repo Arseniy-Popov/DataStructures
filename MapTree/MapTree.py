@@ -1,8 +1,8 @@
 from DataStructures.Map.MapBase import MapBase
-from DataStructures.Tree import LinkedBinaryTree
+from DataStructures.Tree.Tree import LinkedBinaryTree
 
 
-class MapTree(MapBase, LinkedBinaryTree):
+class MapTree(LinkedBinaryTree, MapBase):
     def _findKey(self, key, current, parent=None):
         if current is None:
             return parent
@@ -31,3 +31,6 @@ class MapTree(MapBase, LinkedBinaryTree):
                 self.addLeft(position, self._Item(key, value))
         else:
             position.item._value = value
+    
+    def __delitem__(self, key):
+        return 
