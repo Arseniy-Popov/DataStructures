@@ -188,9 +188,13 @@ class LinkedBinaryTree(BinaryTree):
     # ACCESORS
 
     def root(self):
+        if self._root is None:
+            return None
         return self.Position(self._root)
 
     def parent(self, position):
+        if position.node.parent is None:
+            return None
         return self.Position(position.node.parent)
 
     def numChildren(self, position):
