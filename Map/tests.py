@@ -1,6 +1,7 @@
 import unittest
 from string import ascii_letters, ascii_lowercase
 import random
+from abc import ABC, abstractmethod
 
 from DataStructures.Map.MapBase import HashMapBase
 from DataStructures.Map.ListMap import ListMap
@@ -9,10 +10,11 @@ from DataStructures.Map.Map_LinearProbing import Map_LinearProbing
 from DataStructures.Map.SortedListMap import SortedListMap
 
 
-class TestMap_List(unittest.TestCase):
+class TestMap_Base(ABC):
+    @abstractmethod
     def initMap(self):
-        self.map = ListMap()
-
+        self.map = None
+    
     def setUp(self):
         self.initMap()
         self.test_dict = {}
@@ -46,6 +48,11 @@ class TestMap_List(unittest.TestCase):
 
     def test_len(self):
         self.assertEqual(len(self.map), len(self.test_dict))
+
+
+class TestMap_List(TestMap_Base, unittest.TestCase):
+    def initMap(self):
+        self.map = ListMap()
 
 
 class TestMap_Hash_SeparateChaining(TestMap_List):
