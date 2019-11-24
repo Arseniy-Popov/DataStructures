@@ -15,10 +15,13 @@ class TestMap_Base(ABC):
     def initMap(self):
         self.map = None
     
+    def initKeys(self):
+        self.initial_keys = list(ascii_letters[::-1])
+    
     def setUp(self):
         self.initMap()
+        self.initKeys()
         self.test_dict = {}
-        self.initial_keys = list(ascii_letters[::-1])
         for index, letter in enumerate(self.initial_keys):
             self.map[letter] = self.test_dict[letter] = index ** 2
 
