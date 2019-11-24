@@ -24,7 +24,7 @@ class test_BinaryTree(unittest.TestCase):
         self.assertEqual(self.tree.root().item(), "a")
 
     def test_traversals(self):
-        print('\n')
+        print("\n")
         print(f"preorder: {self.traversal_to_items(self.tree.traversePreorder())}")
         print(f"postorder: {self.traversal_to_items(self.tree.traversePostorder())}")
         print(f"inorder: {self.traversal_to_items(self.tree.traverseInorder())}")
@@ -49,8 +49,9 @@ class test_toc(unittest.TestCase):
         self.assertRaises(ValueError, tOfContents, [])
 
     def test_toc(self):
-        print('\n')
+        print("\n")
         tOfContents(self.tree)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

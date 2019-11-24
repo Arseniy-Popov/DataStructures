@@ -14,10 +14,10 @@ class TestMap_Base(ABC):
     @abstractmethod
     def initMap(self):
         self.map = None
-    
+
     def initKeys(self):
         self.initial_keys = list(ascii_letters[::-1])
-    
+
     def setUp(self):
         self.initMap()
         self.initKeys()

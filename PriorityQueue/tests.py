@@ -44,7 +44,7 @@ class test_sorted(test_priotityQueue):
 
     def build_queue(self):
         self.queue = PriorityQueue(sorted=True)
-        
+
     def test_order(self):
         self.assertEqual(self.priorities(self.queue), [1, 2, 3, 5, 7, 15, 20])
 
