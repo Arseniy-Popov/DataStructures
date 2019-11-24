@@ -4,12 +4,12 @@ from DataStructures.Tree.Tree import LinkedBinaryTree
 
 class MapTree(LinkedBinaryTree, MapBase):
     def _findKey(self, key, current, parent=None):
-        if current.item() is None:
+        if current is None:
             return parent
         if current.item()._key < key:
-            self._findKey(key, self.right(current), parent=current)
+            return self._findKey(key, self.right(current), parent=current)
         elif current.item()._key > key:
-            self._findKey(key, self.left(current), parent=current)
+            return self._findKey(key, self.left(current), parent=current)
         elif current.item()._key == key:
             return current
     
@@ -22,7 +22,7 @@ class MapTree(LinkedBinaryTree, MapBase):
     
     def __setitem__(self, key, value):
         position = self._findKey(key, self.root())
-        if position.item() is None:
+        if position is None:
             self.addRoot(self._Item(key, value))
         elif position.item()._key != key:
             if position.item()._key < key:
