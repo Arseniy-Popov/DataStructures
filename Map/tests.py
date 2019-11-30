@@ -42,6 +42,7 @@ class TestMap_Base(ABC):
     def test_del(self):
         self.initial_keys_post_deletion = self.initial_keys
         while len(self.map) > 0:
+            # breakpoint()
             key = random.choice(self.initial_keys_post_deletion)
             self.initial_keys_post_deletion.remove(key)
             del self.test_dict[key]

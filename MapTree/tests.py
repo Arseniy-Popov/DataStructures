@@ -15,6 +15,9 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
     def test_graph(self):
         self.map.graph()
 
+    def test_iter(self):
+        self.assertEqual(sorted(self.initial_keys), [i for i in self.map])
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

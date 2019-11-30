@@ -14,7 +14,8 @@ class test_BinaryTree(unittest.TestCase):
         self.tree.addRight(d, "f")
         self.tree.addLeft(d, "g")
         self.tree.addLeft(g, "u")
-        self.tree.addRight(g, "y")
+        h = self.tree.addRight(g, "y")
+        self.tree.addRight(h, "z")
         self.tree.graph()
 
     def traversal_to_items(self, iterable):
@@ -22,6 +23,9 @@ class test_BinaryTree(unittest.TestCase):
 
     def test_root(self):
         self.assertEqual(self.tree.root().item(), "a")
+
+    def test_del(self):
+        self.tree.delete(h)
 
     def test_traversals(self):
         print("\n")

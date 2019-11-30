@@ -34,6 +34,10 @@ class Tree(ABC):
     def __len__(self):
         pass
 
+    @abstractmethod
+    def delete(self, position):
+        pass
+
     def positions(self):
         return self.traversePreorder()
 
@@ -85,7 +89,7 @@ class Tree(ABC):
         else:
             return 1 + self.depth(self.parent(position))
 
-    def heigth(self, position=None):
+    def height(self, position=None):
         if position is None:
             position = self.root()
         if self.isLeaf(position):
@@ -157,6 +161,9 @@ class LinkedBinaryTree(BinaryTree):
         self._root = None
         self.size = 0
 
+    def validatePosition(self):
+        pass
+
     # MODIFIERS
 
     def addRoot(self, item):
@@ -184,6 +191,27 @@ class LinkedBinaryTree(BinaryTree):
             raise ValueError("node not a leaf")
         position.node.left = tree1.root().node
         position.node.right = tree2.root().node
+
+    def delete(self, position):
+        """Delete a node with a single leaf
+        and replace it with its child."""
+        if self.numChildren(position) > 1:
+            raise ValueError
+        else:
+            parent, child = self.parent(position), next(self.children(position))
+            if self.left(position) is not None:
+                if parent.left() == position:
+                    parent.node.left = child.node
+                else:
+                    parent.node.right = child.node
+                child.node.parent = parent.node
+            elif self.right(position) is not None:
+                if parent.left() == position:
+                    parent.node.left = child.node
+                else:
+                    parent.node.right = child.node
+            child.node.parent = parent.node
+        position.node.parent = position.node
 
     # ACCESORS
 
