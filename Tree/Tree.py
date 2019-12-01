@@ -1,6 +1,7 @@
 from graphviz import Digraph
 from abc import ABC, abstractmethod
 from collections import deque
+import datetime
 
 
 class Tree(ABC):
@@ -9,6 +10,8 @@ class Tree(ABC):
             self.node = node
 
         def __eq__(self, other):
+            if not isinstance(other, Tree.Position):
+                return False
             return self.node == other.node
 
         def __ne__(self, other):
@@ -107,7 +110,7 @@ class Tree(ABC):
             for child in self.children(position):
                 graph.edge(str(id(position.node)), str(id(child.node)))
         if filename is None:
-            graph.render(filename="tree", directory=directory)
+            graph.render(filename=str(datetime.datetime.utcnow()), directory=directory)
         else:
             graph.render(filename=filename, directory=directory)
 
@@ -197,21 +200,24 @@ class LinkedBinaryTree(BinaryTree):
         and replace it with its child."""
         if self.numChildren(position) > 1:
             raise ValueError
+        elif self.numChildren(position) == 0:
+            if position != self.root():
+                if self.left(self.parent(position)) == position:
+                    self.parent(position).node.left = None
+                else:
+                    self.parent(position).node.right = None
+            else:
+                self._root = None
+            position.node.parent = position.node
         else:
             parent, child = self.parent(position), next(self.children(position))
-            if self.left(position) is not None:
-                if parent.left() == position:
-                    parent.node.left = child.node
-                else:
-                    parent.node.right = child.node
-                child.node.parent = parent.node
-            elif self.right(position) is not None:
-                if parent.left() == position:
-                    parent.node.left = child.node
-                else:
-                    parent.node.right = child.node
+            if self.left(parent) == position:
+                parent.node.left = child.node
+            else:
+                parent.node.right = child.node
             child.node.parent = parent.node
-        position.node.parent = position.node
+            position.node.parent = position.node
+        self.size -= 1
 
     # ACCESORS
 
