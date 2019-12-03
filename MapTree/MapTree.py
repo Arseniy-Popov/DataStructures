@@ -23,10 +23,10 @@ class MapTree(LinkedBinaryTree, MapBase):
 
     def __getitem__(self, key):
         position = self._findKey(key, self.root())
-        if position is None or position.item()._key == key:
+        if position is not None and position.item()._key == key:
             return position.item()._value
         else:
-            raise ValueError(f"key {key} not found")
+            raise KeyError(f"key {key} not found")
 
     def __setitem__(self, key, value):
         position = self._findKey(key, self.root())
@@ -50,4 +50,4 @@ class MapTree(LinkedBinaryTree, MapBase):
             self.delete(replacement)
 
     def __iter__(self):
-        yield from self.traverseInorder()
+        yield from (i.item()._key for i in self.traverseInorder())

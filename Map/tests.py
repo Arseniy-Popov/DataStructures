@@ -43,8 +43,6 @@ class TestMap_Base(ABC):
         self.initial_keys_post_deletion = self.initial_keys
         while len(self.map) > 0:
             key = random.choice(self.initial_keys_post_deletion)
-            print(key)
-            self.map.graph()
             self.initial_keys_post_deletion.remove(key)
             del self.test_dict[key]
             del self.map[key]

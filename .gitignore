@@ -1,4 +1,5 @@
-Output/
+
+*Output/
 __pycache__/
 .swp
 .~c9*.py
