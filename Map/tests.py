@@ -44,10 +44,10 @@ class TestMap_Base(ABC):
         while len(self.map) > 0:
             key = random.choice(self.initial_keys_post_deletion)
             print(key)
+            self.map.graph()
             self.initial_keys_post_deletion.remove(key)
             del self.test_dict[key]
             del self.map[key]
-            self.map.graph()
             self.contents_match()
         self.assertRaises(KeyError, self.map.__getitem__, "c")
 

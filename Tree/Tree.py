@@ -187,7 +187,7 @@ class LinkedBinaryTree(BinaryTree):
         return self.Position(position.node.right)
 
     def replace(self, position, item):
-        position.node.item == item
+        position.node.item = item
 
     def attach(self, position, tree1, tree2):
         if self.isLeaf(position) is not True:
@@ -208,15 +208,18 @@ class LinkedBinaryTree(BinaryTree):
                     self.parent(position).node.right = None
             else:
                 self._root = None
-            position.node.parent = position.node
         else:
             parent, child = self.parent(position), next(self.children(position))
-            if self.left(parent) == position:
-                parent.node.left = child.node
+            if position != self.root():
+                if self.left(parent) == position:
+                    parent.node.left = child.node
+                else:
+                    parent.node.right = child.node
+                child.node.parent = parent.node
             else:
-                parent.node.right = child.node
-            child.node.parent = parent.node
-            position.node.parent = position.node
+                self._root = child.node
+                child.node.parent = None
+        position.node.parent = position.node
         self.size -= 1
 
     # ACCESORS
