@@ -3,14 +3,21 @@ from DataStructures.Tree.Tree import LinkedBinaryTree
 
 
 class MapTree(LinkedBinaryTree, MapBase):
+    class Position(LinkedBinaryTree.Position):
+        def key(self):
+            return self.node.item._key
+
+        def value(self):
+            return self.node.item._value
+
     def _findKey(self, key, current, parent=None):
         if current is None:
             return parent
-        if current.item()._key < key:
+        if current.key() < key:
             return self._findKey(key, self.right(current), parent=current)
-        elif current.item()._key > key:
+        elif current.key() > key:
             return self._findKey(key, self.left(current), parent=current)
-        elif current.item()._key == key:
+        elif current.key() == key:
             return current
 
     def _rightmostInSubtree(self, position):
@@ -23,8 +30,8 @@ class MapTree(LinkedBinaryTree, MapBase):
 
     def __getitem__(self, key):
         position = self._findKey(key, self.root())
-        if position is not None and position.item()._key == key:
-            return position.item()._value
+        if position is not None and position.key() == key:
+            return position.value()
         else:
             raise KeyError(f"key {key} not found")
 
@@ -32,13 +39,13 @@ class MapTree(LinkedBinaryTree, MapBase):
         position = self._findKey(key, self.root())
         if position is None:
             self.addRoot(self._Item(key, value))
-        elif position.item()._key != key:
-            if position.item()._key < key:
+        elif position.key() != key:
+            if position.key() < key:
                 self.addRight(position, self._Item(key, value))
             else:
                 self.addLeft(position, self._Item(key, value))
         else:
-            position.item()._value = value
+            self.replace(position, self._Item(key, value))
 
     def __delitem__(self, key):
         position = self._findKey(key, self.root())
@@ -50,4 +57,4 @@ class MapTree(LinkedBinaryTree, MapBase):
             self.delete(replacement)
 
     def __iter__(self):
-        yield from (i.item()._key for i in self.traverseInorder())
+        yield from (i.key() for i in self.traverseInorder())
