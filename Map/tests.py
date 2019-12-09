@@ -48,6 +48,7 @@ class TestMap_Base(ABC):
             del self.map[key]
             self.contents_match()
         self.assertRaises(KeyError, self.map.__getitem__, "c")
+        self.assertRaises(KeyError, self.map.__delitem__, "c")
 
     def test_len(self):
         self.assertEqual(len(self.map), len(self.test_dict))

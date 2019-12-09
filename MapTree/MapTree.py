@@ -23,10 +23,9 @@ class MapTree(LinkedBinaryTree, MapBase):
     def _rightmostInSubtree(self, position):
         """Returns position of the element with the largest key
         (the rightmost element) in a subtree."""
-        if self.right(position) is not None:
-            return self._rightmostInSubtree(self.right(position))
-        else:
-            return position
+        while self.right(position) is not None:
+            position = self.right(position)
+        return position
 
     def __getitem__(self, key):
         position = self._findKey(key, self.root())
@@ -49,6 +48,8 @@ class MapTree(LinkedBinaryTree, MapBase):
 
     def __delitem__(self, key):
         position = self._findKey(key, self.root())
+        if position is None or position.key() != key:
+            raise KeyError
         if self.numChildren(position) <= 1:
             self.delete(position)
         else:

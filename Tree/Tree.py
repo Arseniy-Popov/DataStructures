@@ -103,7 +103,14 @@ class Tree(ABC):
     def graph(self, filename=None, directory="Output"):
         """Renders a graph using the Graphviz module."""
         graph = Digraph()
-        graph.attr("node", shape="circle")
+        graph.attr(
+            "node",
+            shape="circle",
+            fixedsize="True",
+            height="0.5",
+            width="0.5",
+            fontsize="9",
+        )
         for position in self.positions():
             graph.node(str(id(position.node)), label=str(position.node.item))
         for position in self.positions():
