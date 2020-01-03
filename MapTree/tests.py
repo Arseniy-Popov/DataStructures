@@ -4,6 +4,7 @@ import shutil
 
 from DataStructures.Map.tests import TestMap_Base
 from DataStructures.MapTree.MapTree import MapTree
+from DataStructures.MapTree.AVLMapTree import AVLMapTree
 
 
 class Test_MapTree(TestMap_Base, unittest.TestCase):
@@ -13,7 +14,7 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
     def setUpClass(cls):
         """Cleans up the output folder prior to the tests."""
         try:
-            shutil.rmtree(Test_MapTree.folder)
+            shutil.rmtree(cls.folder)
         except:
             pass
 
@@ -28,6 +29,11 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
 
     def test_iter(self):
         self.assertEqual(sorted(self.initial_keys), [i for i in self.map])
+
+
+class Test_AVLMapTree(Test_MapTree):
+    def initMap(self):
+        self.map = AVLMapTree()
 
 
 if __name__ == "__main__":

@@ -1,22 +1,32 @@
 import unittest
+import shutil
 from DataStructures.Tree.Tree import LinkedBinaryTree
 from DataStructures.Tree.toc import tOfContents
 
 
 class test_BinaryTree(unittest.TestCase):
+    folder = "Output"
+
+    @classmethod
+    def setUpClass(cls):
+        """Cleans up the output folder prior to the tests."""
+        try:
+            shutil.rmtree(cls.folder)
+        except:
+            pass
+
     def setUp(self):
         self.tree = LinkedBinaryTree()
-        a = self.tree.addRoot("a")
-        c = self.tree.addLeft(a, "c")
-        d = self.tree.addRight(a, "d")
-        self.tree.addRight(c, "f")
-        g = self.tree.addLeft(c, "g")
-        self.tree.addRight(d, "f")
-        self.tree.addLeft(d, "g")
-        self.tree.addLeft(g, "u")
-        h = self.tree.addRight(g, "y")
-        self.tree.addRight(h, "z")
-        self.tree.graph()
+        self.a = self.tree.addRoot("a")
+        self.c = self.tree.addLeft(self.a, "c")
+        self.d = self.tree.addRight(self.a, "d")
+        self.tree.addRight(self.c, "f")
+        self.g = self.tree.addLeft(self.c, "g")
+        self.f = self.tree.addRight(self.d, "f")
+        self.t = self.tree.addLeft(self.d, "t")
+        self.tree.addLeft(self.g, "u")
+        self.h = self.tree.addRight(self.g, "y")
+        self.tree.addRight(self.h, "z")
 
     def traversal_to_items(self, iterable):
         return [position.item() for position in iterable]
@@ -24,8 +34,14 @@ class test_BinaryTree(unittest.TestCase):
     def test_root(self):
         self.assertEqual(self.tree.root().item(), "a")
 
+    def test_relink_subtree(self):
+        self.tree.relinkSubtree(self.t, self.g)
+        self.tree.graph(filename="relink")
+
     def test_del(self):
-        self.tree.delete(h)
+        self.tree.graph(filename="initial")
+        self.tree.delete(self.h)
+        self.tree.graph(filename="deletion")
 
     def test_traversals(self):
         print("\n")

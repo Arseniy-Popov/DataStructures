@@ -98,7 +98,7 @@ class Tree(ABC):
         if self.isLeaf(position):
             return 1
         else:
-            return 1 + max(self.heigth(p) for p in self.children(position))
+            return 1 + max(self.height(p) for p in self.children(position))
 
     def graph(self, filename=None, directory="Output"):
         """Renders a graph using the Graphviz module."""
@@ -211,6 +211,7 @@ class LinkedBinaryTree(BinaryTree):
             if position != self.root():
                 if self.left(self.parent(position)) == position:
                     self.parent(position).node.left = None
+
                 else:
                     self.parent(position).node.right = None
             else:
@@ -228,6 +229,19 @@ class LinkedBinaryTree(BinaryTree):
                 child.node.parent = None
         position.node.parent = position.node
         self.size -= 1
+
+    def relinkSubtree(self, position, tree, left=True):
+        """ Relink subtree starting with the 'tree' node to be a child
+        of the 'position' node. """
+        if tree.node.parent.left == tree.node:
+            tree.node.parent.left = None
+        else:
+            tree.node.parent.right = None
+        tree.node.parent = position.node
+        if left:
+            position.node.left = tree.node
+        else:
+            position.node.right = tree.node
 
     # ACCESORS
 

@@ -40,9 +40,10 @@ class MapTree(LinkedBinaryTree, MapBase):
             self.addRoot(self._Item(key, value))
         elif position.key() != key:
             if position.key() < key:
-                self.addRight(position, self._Item(key, value))
+                added = self.addRight(position, self._Item(key, value))
             else:
-                self.addLeft(position, self._Item(key, value))
+                added = self.addLeft(position, self._Item(key, value))
+            self._rebalance(added)
         else:
             self.replace(position, self._Item(key, value))
 
@@ -59,3 +60,6 @@ class MapTree(LinkedBinaryTree, MapBase):
 
     def __iter__(self):
         yield from (i.key() for i in self.traverseInorder())
+
+    def _rebalance(self, position):
+        pass
