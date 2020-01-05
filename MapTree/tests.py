@@ -11,7 +11,7 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Cleans up the output folder prior to the tests."""
-        cls.folder = f"Output {cls.__name__}"
+        cls.folder = f"Output/ {cls.__name__}"
         try:
             shutil.rmtree(cls.folder)
         except:
