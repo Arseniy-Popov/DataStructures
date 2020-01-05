@@ -22,8 +22,8 @@ class TestMap_Base(ABC):
         self.initMap()
         self.initKeys()
         self.test_dict = {}
-        for index, letter in enumerate(self.initial_keys):
-            self.map[letter] = self.test_dict[letter] = index ** 2
+        for index, key in enumerate(self.initial_keys):
+            self.map[key] = self.test_dict[key] = index ** 2
 
     def contents_match(self):
         for key in self.test_dict.keys():
@@ -33,10 +33,12 @@ class TestMap_Base(ABC):
         print(f"\n items:\n {list(self.map.items())}")
 
     def test_set_get(self):
-        self.contents_match()
-        for key in self.initial_keys:
-            self.map[key] = self.test_dict[key] = -self.map[key]
-        self.contents_match()
+        with self.subTest("initial"):
+            self.contents_match()
+        with self.subTest("reset"):
+            for key in self.initial_keys:
+                self.map[key] = self.test_dict[key] = -self.map[key]
+            self.contents_match()
         # self.display_items()
 
     def test_del(self):

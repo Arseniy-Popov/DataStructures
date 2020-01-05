@@ -167,6 +167,9 @@ class LinkedBinaryTree(BinaryTree):
         def item(self):
             return self.node.item
 
+        def __repr__(self):
+            return f"Position({self.item()})"
+
     def __init__(self):
         self._root = None
         self.size = 0
@@ -230,18 +233,20 @@ class LinkedBinaryTree(BinaryTree):
         position.node.parent = position.node
         self.size -= 1
 
-    def relinkSubtree(self, position, tree, left=True):
+    def relinkSubtree(self, position, subtree, left=True):
         """ Relink subtree starting with the 'tree' node to be a child
         of the 'position' node. """
-        if tree.node.parent.left == tree.node:
-            tree.node.parent.left = None
-        else:
-            tree.node.parent.right = None
-        tree.node.parent = position.node
+        # clear old parent of subtree of child
+        if subtree.node.parent.left == subtree.node:
+            subtree.node.parent.left = None
+        elif subtree.node.parent.right == subtree.node:
+            subtree.node.parent.right = None
+        # attach subtree to new parent
+        subtree.node.parent = position.node
         if left:
-            position.node.left = tree.node
+            position.node.left = subtree.node
         else:
-            position.node.right = tree.node
+            position.node.right = subtree.node
 
     # ACCESORS
 
