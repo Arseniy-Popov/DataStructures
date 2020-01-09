@@ -11,20 +11,20 @@ class AVLMapTree(MapTree):
                 return self._trinodeRestructure(walk, walk_1, walk_2)
 
     def _trinodeRestructure(self, high, mid, low):
-        if self._flagDoubleRotation(high, mid, low):    
-            self._rotate(mid, low)
-            self._rotate(high, low)
+        if self._flagDoubleRotation(high, mid, low):
+            mid, low = self._rotate(mid, low)
+            self._rotate(high, mid)
         else:
             self._rotate(high, mid)
 
     def _rotate(self, upper, lower):
-        subtrees = it.chain.from_iterable(
-            self.children(position) for position in (upper, lower)
-        )
+        subtrees = it.chain.from_iterable(self.children(p) for p in (upper, lower))
         subtrees = [s for s in subtrees if s not in (upper, lower)]
+        # subtrees = [s for s in self._children(upper, lower) if s not in (upper, lower)]
         new_upper = self._addLeaf(self.parent(upper), lower.key(), lower.value())
-        self._addLeaf(new_upper, upper.key(), upper.value())
+        new_lower = self._addLeaf(new_upper, upper.key(), upper.value())
         self._relinkSubtrees(new_upper, subtrees)
+        return new_upper, new_lower
 
     def _relinkSubtrees(self, start, subtrees):
         for subtree in subtrees:
@@ -47,9 +47,9 @@ class AVLMapTree(MapTree):
         else:
             return True
 
-    # def _children(self, *positions):
-    #     for position in positions:
-    #         yield from self.children(position)
+    def _children(self, *positions):
+        for position in positions:
+            yield from self.children(position)
 
     def _heightDiff(self, position):
         return abs(self._rightHeight(position) - self._leftHeight(position))

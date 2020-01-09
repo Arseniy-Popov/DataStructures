@@ -22,7 +22,7 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
         self.map = MapTree()
 
     def initKeys(self):
-        self.initial_keys = (2,4,3)
+        self.initial_keys = random.sample(range(100), 20)
 
     def test_graph(self):
         self.map.graph(directory=self.subfolder)
@@ -36,7 +36,27 @@ class Test_AVLMapTree(Test_MapTree):
         self.map = AVLMapTree()
 
     def setUp(self):
-        random.seed(5)
+        pass
+
+    def test_rotations(self):
+        self.test_cases = {
+            "single_left": (5, 4, 3),
+            "single_right": (1, 4, 6),
+            "double_right": (10, 20, 15),
+            "double_left": (10, 5, 8),
+        }
+        for case in self.test_cases:
+            self.initMap()
+            self.test_dict, previous = {}, None
+            for key in self.test_cases[case]:
+                with self.subTest(case=case, key=key, previous=previous):
+                    self.map[key] = self.test_dict[key] = random.randint(1, 10)
+                    self.contents_match()
+                previous = key
+            self.map.graph(filename=f"{case}", directory=self.subfolder)
+
+    def test_buildup(self):
+        # random.seed(5)
         self.initKeys()
         print(f"\n initial_keys: {self.initial_keys}")
         self.initMap()
