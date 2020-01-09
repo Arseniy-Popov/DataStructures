@@ -11,7 +11,8 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Cleans up the output folder prior to the tests."""
-        cls.folder = f"Output/ {cls.__name__}"
+        cls.folder = f"Output"
+        cls.subfolder = cls.folder + f"/{cls.__name__}"
         try:
             shutil.rmtree(cls.folder)
         except:
@@ -21,10 +22,10 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
         self.map = MapTree()
 
     def initKeys(self):
-        self.initial_keys = random.sample(range(100), 20)
+        self.initial_keys = (2,4,3)
 
     def test_graph(self):
-        self.map.graph(directory=self.folder)
+        self.map.graph(directory=self.subfolder)
 
     def test_iter(self):
         self.assertEqual(sorted(self.initial_keys), [i for i in self.map])
@@ -33,9 +34,10 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
 class Test_AVLMapTree(Test_MapTree):
     def initMap(self):
         self.map = AVLMapTree()
-        # random.seed(2)
 
-    def test_populating(self):
+    def setUp(self):
+        random.seed(5)
+        self.initKeys()
         print(f"\n initial_keys: {self.initial_keys}")
         self.initMap()
         self.test_dict, previous = {}, None
@@ -44,7 +46,7 @@ class Test_AVLMapTree(Test_MapTree):
                 self.map[key] = self.test_dict[key] = index ** 2
                 self.contents_match()
             previous = key
-            self.map.graph(filename=str(key), directory=self.folder)
+            self.map.graph(filename=str(key), directory=self.subfolder)
 
 
 if __name__ == "__main__":

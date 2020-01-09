@@ -1,4 +1,5 @@
 from DataStructures.MapTree.MapTree import MapTree
+import itertools as it
 
 
 class AVLMapTree(MapTree):
@@ -7,43 +8,48 @@ class AVLMapTree(MapTree):
         while walk != self.root():
             walk, walk_1, walk_2 = self.parent(walk), walk, walk_1
             if self._heightDiff(walk) > 1:
-                self._trinodeRestructure(walk, walk_1, walk_2)
+                return self._trinodeRestructure(walk, walk_1, walk_2)
 
-    def _trinodeRestructure(self, z, x, y):
-        subtrees, parent, isLeft = [], None, False
-        a, b, c = sorted((z, x, y), key=lambda pos: pos.key())
-        aItem, bItem, cItem = a.item(), b.item(), c.item()
-        for position in a, b, c:
-            for subtree in self.children(position):
-                if subtree not in (a, b, c):
-                    subtrees.append(subtree)
-            if self.parent(position) not in (a, b, c):
-                if self.parent(position) is None:
-                    parent = None
-                else:
-                    if self.left(self.parent(position)) == position:
-                        parent, isLeft = self.parent(position), True
-                    else:
-                        parent, isLeft = self.parent(position), False
-        if parent is None:
-            self.replace(self.root(), bItem)
-            parent = self.root()
+    def _trinodeRestructure(self, high, mid, low):
+        if self._flagDoubleRotation(high, mid, low):    
+            self._rotate(mid, low)
+            self._rotate(high, low)
         else:
-            if isLeft:
-                parent = self.addLeft(parent, bItem)
-            else:
-                parent = self.addRight(parent, bItem)
-        self.addLeft(parent, aItem)
-        self.addRight(parent, cItem)
-        self._trinodeRelinkSubtrees(parent, subtrees)
+            self._rotate(high, mid)
 
-    def _trinodeRelinkSubtrees(self, trinode, subtrees):
+    def _rotate(self, upper, lower):
+        subtrees = it.chain.from_iterable(
+            self.children(position) for position in (upper, lower)
+        )
+        subtrees = [s for s in subtrees if s not in (upper, lower)]
+        new_upper = self._addLeaf(self.parent(upper), lower.key(), lower.value())
+        self._addLeaf(new_upper, upper.key(), upper.value())
+        self._relinkSubtrees(new_upper, subtrees)
+
+    def _relinkSubtrees(self, start, subtrees):
         for subtree in subtrees:
-            node = self._findKey(subtree.key(), trinode)
+            node = self._findKey(subtree.key(), start)
             if subtree.key() < node.key():
                 self.relinkSubtree(node, subtree, left=True)
             else:
                 self.relinkSubtree(node, subtree, left=False)
+
+    def _flagDoubleRotation(self, high, mid, low):
+        """ Single rotation if low is either left of left 
+        of high or right of right of high, double rotation otherwise. """
+        right_grandchild, left_grandchild = None, None
+        if self.left(high) is not None and self.left(self.left(high)) is not None:
+            left_grandchild = self.left(self.left(high)) == low
+        if self.right(high) is not None and self.right(self.right(high)) is not None:
+            right_grandchild = self.right(self.right(high)) == low
+        if right_grandchild or left_grandchild:
+            return False
+        else:
+            return True
+
+    # def _children(self, *positions):
+    #     for position in positions:
+    #         yield from self.children(position)
 
     def _heightDiff(self, position):
         return abs(self._rightHeight(position) - self._leftHeight(position))

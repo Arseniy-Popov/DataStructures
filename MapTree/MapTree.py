@@ -27,6 +27,15 @@ class MapTree(LinkedBinaryTree, MapBase):
             position = self.right(position)
         return position
 
+    def _addLeaf(self, position, key, value):
+        if position is None:
+            added = self.addRoot(self._Item(key, value))
+        elif position.key() < key:
+            added = self.addRight(position, self._Item(key, value))
+        else:
+            added = self.addLeft(position, self._Item(key, value))
+        return added
+
     def __getitem__(self, key):
         position = self._findKey(key, self.root())
         if position is not None and position.key() == key:
@@ -36,13 +45,8 @@ class MapTree(LinkedBinaryTree, MapBase):
 
     def __setitem__(self, key, value):
         position = self._findKey(key, self.root())
-        if position is None:
-            self.addRoot(self._Item(key, value))
-        elif position.key() != key:
-            if position.key() < key:
-                added = self.addRight(position, self._Item(key, value))
-            else:
-                added = self.addLeft(position, self._Item(key, value))
+        if position is None or position.key() != key:
+            added = self._addLeaf(position, key, value)
             self._rebalance(added)
         else:
             self.replace(position, self._Item(key, value))

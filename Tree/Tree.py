@@ -180,8 +180,6 @@ class LinkedBinaryTree(BinaryTree):
     # MODIFIERS
 
     def addRoot(self, item):
-        if self.size != 0:
-            raise ValueError("non-empty tree")
         self._root = self.Node(None, item)
         self.size += 1
         return self.Position(self._root)
@@ -198,12 +196,6 @@ class LinkedBinaryTree(BinaryTree):
 
     def replace(self, position, item):
         position.node.item = item
-
-    def attach(self, position, tree1, tree2):
-        if self.isLeaf(position) is not True:
-            raise ValueError("node not a leaf")
-        position.node.left = tree1.root().node
-        position.node.right = tree2.root().node
 
     def delete(self, position):
         """Delete a node with a single leaf
