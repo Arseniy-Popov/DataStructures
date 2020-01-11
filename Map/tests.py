@@ -19,11 +19,15 @@ class TestMap_Base(ABC):
         self.initial_keys = list(ascii_letters[::-1])
 
     def setUp(self):
+        random.seed(1)
         self.initMap()
         self.initKeys()
         self.test_dict = {}
         for index, key in enumerate(self.initial_keys):
             self.map[key] = self.test_dict[key] = index ** 2
+
+    def check_requirements(self):
+        self.contents_match()
 
     def contents_match(self):
         for key in self.test_dict.keys():
@@ -38,17 +42,20 @@ class TestMap_Base(ABC):
         with self.subTest("reset"):
             for key in self.initial_keys:
                 self.map[key] = self.test_dict[key] = -self.map[key]
-            self.contents_match()
+            self.check_requirements()
         # self.display_items()
 
     def test_del(self):
+        print(f"\n initial_keys: {self.initial_keys}")
         self.initial_keys_post_deletion = self.initial_keys
-        while len(self.map) > 0:
+        while len(self.test_dict) > 0:
             key = random.choice(self.initial_keys_post_deletion)
             self.initial_keys_post_deletion.remove(key)
+            self.map.graph(filename=f"del {key}", directory=f"Output/{self.__class__.__name__}")
             del self.test_dict[key]
             del self.map[key]
-            self.contents_match()
+            with self.subTest(key):
+                self.check_requirements()
         self.assertRaises(KeyError, self.map.__getitem__, "c")
         self.assertRaises(KeyError, self.map.__delitem__, "c")
 

@@ -20,7 +20,6 @@ class AVLMapTree(MapTree):
     def _rotate(self, upper, lower):
         subtrees = it.chain.from_iterable(self.children(p) for p in (upper, lower))
         subtrees = [s for s in subtrees if s not in (upper, lower)]
-        # subtrees = [s for s in self._children(upper, lower) if s not in (upper, lower)]
         new_upper = self._addLeaf(self.parent(upper), lower.key(), lower.value())
         new_lower = self._addLeaf(new_upper, upper.key(), upper.value())
         self._relinkSubtrees(new_upper, subtrees)
@@ -37,19 +36,18 @@ class AVLMapTree(MapTree):
     def _flagDoubleRotation(self, high, mid, low):
         """ Single rotation if low is either left of left 
         of high or right of right of high, double rotation otherwise. """
-        right_grandchild, left_grandchild = None, None
-        if self.left(high) is not None and self.left(self.left(high)) is not None:
-            left_grandchild = self.left(self.left(high)) == low
-        if self.right(high) is not None and self.right(self.right(high)) is not None:
-            right_grandchild = self.right(self.right(high)) == low
-        if right_grandchild or left_grandchild:
+        try:                            # check if left of left
+            flag_left = self.left(self.left(high)) == low
+        except:
+            flag_left = False
+        try:                            # check if right of right
+            flag_right = self.right(self.right(high)) == low
+        except:
+            flag_right = False
+        if flag_left or flag_right:     # check if either
             return False
         else:
             return True
-
-    def _children(self, *positions):
-        for position in positions:
-            yield from self.children(position)
 
     def _heightDiff(self, position):
         return abs(self._rightHeight(position) - self._leftHeight(position))

@@ -14,7 +14,7 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
         cls.folder = f"Output"
         cls.subfolder = cls.folder + f"/{cls.__name__}"
         try:
-            shutil.rmtree(cls.folder)
+            shutil.rmtree(cls.subfolder)
         except:
             pass
 
@@ -34,9 +34,6 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
 class Test_AVLMapTree(Test_MapTree):
     def initMap(self):
         self.map = AVLMapTree()
-
-    def setUp(self):
-        pass
 
     def test_rotations(self):
         self.test_cases = {
@@ -64,10 +61,16 @@ class Test_AVLMapTree(Test_MapTree):
         for index, key in enumerate(self.initial_keys):
             with self.subTest(key=key, previous=previous):
                 self.map[key] = self.test_dict[key] = index ** 2
-                self.contents_match()
+                self.check_requirements()
             previous = key
             self.map.graph(filename=str(key), directory=self.subfolder)
 
+    def test_balanced(self):
+        self.assertLessEqual(max(self.map._heightDiff(p) for p in self.map.positions()), 1)
+
+    def check_requirements(self):
+            self.contents_match()
+            self.test_balanced()
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
