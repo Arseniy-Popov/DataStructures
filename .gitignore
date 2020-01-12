@@ -1,7 +1,7 @@
 *Output*/
 *Output/
 __pycache__/
-.swp
+*.swp
 .~c9*.py
 *.pdf
 *.gv
