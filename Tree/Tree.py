@@ -206,12 +206,11 @@ class LinkedBinaryTree(BinaryTree):
             if position != self.root():
                 if self.left(self.parent(position)) == position:
                     self.parent(position).node.left = None
-
                 else:
                     self.parent(position).node.right = None
             else:
                 self._root = None
-        else:
+        elif self.numChildren(position) == 1:
             parent, child = self.parent(position), next(self.children(position))
             if position != self.root():
                 if self.left(parent) == position:

@@ -66,11 +66,14 @@ class Test_AVLMapTree(Test_MapTree):
             self.map.graph(filename=str(key), directory=self.subfolder)
 
     def test_balanced(self):
-        self.assertLessEqual(max(self.map._heightDiff(p) for p in self.map.positions()), 1)
+        self.assertLessEqual(
+            max(self.map._heightDiff(p) for p in self.map.positions()), 1
+        )
 
     def check_requirements(self):
-            self.contents_match()
-            self.test_balanced()
+        self.contents_match()
+        self.test_balanced()
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

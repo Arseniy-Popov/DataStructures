@@ -48,7 +48,7 @@ class MapTree(LinkedBinaryTree, MapBase):
         if position is None or position.key() != key:
             size = len(self)
             added = self._addLeaf(position, key, value)
-            self._rebalance(added)
+            self._rebalanceSet(added)
             self.size = size + 1
         else:
             self.replace(position, self._Item(key, value))
@@ -60,14 +60,19 @@ class MapTree(LinkedBinaryTree, MapBase):
         if self.numChildren(position) <= 1:
             parent = self.parent(position)
             self.delete(position)
-            self._rebalance(parent)
+            self._rebalanceDel(parent)
         else:
             replacement = self._rightmostInSubtree(self.left(position))
             self.replace(position, replacement.item())
+            parent = self.parent(replacement)
             self.delete(replacement)
+            self._rebalanceDel(parent)
 
     def __iter__(self):
         yield from (i.key() for i in self.traverseInorder())
 
-    def _rebalance(self, position):
+    def _rebalanceSet(self, position):
+        pass
+
+    def _rebalanceDel(self, position):
         pass

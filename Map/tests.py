@@ -51,7 +51,9 @@ class TestMap_Base(ABC):
         while len(self.test_dict) > 0:
             key = random.choice(self.initial_keys_post_deletion)
             self.initial_keys_post_deletion.remove(key)
-            self.map.graph(filename=f"del {key}", directory=f"Output/{self.__class__.__name__}")
+            self.map.graph(
+                filename=f"del {key}", directory=f"Output/{self.__class__.__name__}"
+            )
             del self.test_dict[key]
             del self.map[key]
             with self.subTest(key):

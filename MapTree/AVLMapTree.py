@@ -3,12 +3,25 @@ import itertools as it
 
 
 class AVLMapTree(MapTree):
-    def _rebalance(self, position):
+    def _rebalanceSet(self, position):
         walk = walk_1 = walk_2 = position
         while walk != self.root():
             walk, walk_1, walk_2 = self.parent(walk), walk, walk_1
             if self._heightDiff(walk) > 1:
                 return self._trinodeRestructure(walk, walk_1, walk_2)
+
+    def _rebalanceDel(self, position):
+        walk = position
+        while walk != self.root():
+            if self._heightDiff(walk) > 1:
+                walk_ = walk_1 = walk_2 = walk
+                while walk_1 == walk_2:
+                    if self._rightHeight(walk_) >= self._leftHeight(walk_):
+                        walk_, walk_1, walk_2 = self.right(walk_), walk_, walk_1
+                    else:
+                        walk_, walk_1, walk_2 = self.left(walk_), walk_, walk_1
+                self._trinodeRestructure(walk_, walk_1, walk_2)
+            walk = self.parent(walk)
 
     def _trinodeRestructure(self, high, mid, low):
         if self._flagDoubleRotation(high, mid, low):
@@ -36,15 +49,15 @@ class AVLMapTree(MapTree):
     def _flagDoubleRotation(self, high, mid, low):
         """ Single rotation if low is either left of left 
         of high or right of right of high, double rotation otherwise. """
-        try:                            # check if left of left
+        try:  # check if left of left
             flag_left = self.left(self.left(high)) == low
         except:
             flag_left = False
-        try:                            # check if right of right
+        try:  # check if right of right
             flag_right = self.right(self.right(high)) == low
         except:
             flag_right = False
-        if flag_left or flag_right:     # check if either
+        if flag_left or flag_right:  # check if either
             return False
         else:
             return True
