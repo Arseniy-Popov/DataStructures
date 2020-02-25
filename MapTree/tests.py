@@ -52,9 +52,22 @@ class Test_AVLMapTree(Test_MapTree):
                 previous = key
             self.map.graph(filename=f"{case}", directory=self.subfolder)
 
+    # def test_trinode_restructures(self):
+    #     self.initMap()
+    #     self.test_dict, previous = {}, None
+    #     data = (30, 20, 40, 10, 25, 35, 50, 5, 15, 45, 55)
+    #     for key in data:
+    #         self.map[key] = 0
+    #     test_cases = {
+    #         "double_right": self.map.root(), self.map.root().right(), self.map.root().right().right)
+    #     {
+    #     for case in test_cases:
+    #         for key in self.test_cases:
+    #             self.map[key] = self.test_dict[key] = 0
+                
+
     def test_buildup(self):
         # random.seed(5)
-        self.initKeys()
         print(f"\n initial_keys: {self.initial_keys}")
         self.initMap()
         self.test_dict, previous = {}, None

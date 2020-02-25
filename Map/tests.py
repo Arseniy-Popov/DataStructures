@@ -44,13 +44,16 @@ class TestMap_Base(ABC):
                 self.map[key] = self.test_dict[key] = -self.map[key]
             self.check_requirements()
         # self.display_items()
-
+    
     def test_del(self):
         print(f"\n initial_keys: {self.initial_keys}")
         self.initial_keys_post_deletion = self.initial_keys
+        random.shuffle(self.initial_keys_post_deletion)
+        print(f"deletion keys: {self.initial_keys_post_deletion}")
+        deleted_keys = []
         while len(self.test_dict) > 0:
-            key = random.choice(self.initial_keys_post_deletion)
-            self.initial_keys_post_deletion.remove(key)
+            key = self.initial_keys_post_deletion.pop(0)
+            deleted_keys.append(key)
             self.map.graph(
                 filename=f"del {key}", directory=f"Output/{self.__class__.__name__}"
             )
