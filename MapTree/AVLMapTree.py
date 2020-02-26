@@ -13,13 +13,13 @@ class AVLMapTree(MapTree):
     def _rebalanceDel(self, position):
         while position is not None:
             if self._heightDiff(position) > 1:
-                walk = walk_1 = walk_2 = position
-                while walk_1 == walk_2:
-                    if self._rightHeight(walk) >= self._leftHeight(walk):
-                        walk, walk_1, walk_2 = self.right(walk), walk, walk_1
+                low = mid = high = position
+                while mid == high:
+                    if self._rightHeight(low) >= self._leftHeight(low):
+                        low, mid, high = self.right(low), low, mid
                     else:
-                        walk, walk_1, walk_2 = self.left(walk), walk, walk_1
-                self._trinodeRestructure(walk_2, walk_1, walk)
+                        low, mid, high = self.left(low), low, mid
+                self._trinodeRestructure(high, mid, low)
             position = self.parent(position)
 
     def _trinodeRestructure(self, high, mid, low):

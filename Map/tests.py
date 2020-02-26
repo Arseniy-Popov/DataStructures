@@ -51,12 +51,9 @@ class TestMap_Base(ABC):
         random.shuffle(self.initial_keys_post_deletion)
         print(f"deletion keys: {self.initial_keys_post_deletion}")
         deleted_keys = []
-        while len(self.test_dict) > 0:
+        while len(self.test_dict) > 1:
             key = self.initial_keys_post_deletion.pop(0)
             deleted_keys.append(key)
-            self.map.graph(
-                filename=f"del {key}", directory=f"Output/{self.__class__.__name__}"
-            )
             del self.test_dict[key]
             del self.map[key]
             with self.subTest(key):
