@@ -19,12 +19,13 @@ class TestMap_Base(ABC):
         self.initial_keys = list(ascii_letters[::-1])
 
     def setUp(self):
-        random.seed(1)
+        # random.seed(1)
         self.initMap()
         self.initKeys()
         self.test_dict = {}
         for index, key in enumerate(self.initial_keys):
-            self.map[key] = self.test_dict[key] = index ** 2
+            with self.subTest(key):
+                self.map[key] = self.test_dict[key] = index ** 2
 
     def check_requirements(self):
         self.contents_match()
@@ -44,7 +45,7 @@ class TestMap_Base(ABC):
                 self.map[key] = self.test_dict[key] = -self.map[key]
             self.check_requirements()
         # self.display_items()
-    
+
     def test_del(self):
         print(f"\n initial_keys: {self.initial_keys}")
         self.initial_keys_post_deletion = self.initial_keys

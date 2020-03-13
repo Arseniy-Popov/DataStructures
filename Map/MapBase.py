@@ -19,7 +19,7 @@ class HashMapBase(MapBase):
     def __init__(self):
         self._array = [None] * 10
         self._nItems = 0
-        self._maxLoadFactor = 0.8
+        self._maxLoadFactor = 0.6
 
     def __len__(self):
         return self._nItems

@@ -1,10 +1,14 @@
 import unittest
 import random
 import shutil
+import time
 
 from DataStructures.Map.tests import TestMap_Base
+from DataStructures.Map.Map_LinearProbing import Map_LinearProbing
+from DataStructures.Map.Map_SeparateChaining import Map_SeparateChaining
 from DataStructures.MapTree.MapTree import MapTree
 from DataStructures.MapTree.AVLMapTree import AVLMapTree
+from DataStructures.Tree.Tree import Tree
 
 
 class Test_MapTree(TestMap_Base, unittest.TestCase):
@@ -81,7 +85,6 @@ class Test_AVLMapTree(Test_MapTree):
     #     for case in test_cases:
     #         for key in self.test_cases:
     #             self.map[key] = self.test_dict[key] = 0
-                
 
     def test_buildup(self):
         # random.seed(5)
@@ -97,12 +100,54 @@ class Test_AVLMapTree(Test_MapTree):
 
     def test_balanced(self):
         self.assertLessEqual(
-            max(self.map._heightDiff(p) for p in self.map.positions()), 1
+            max(self._test_heightDiff(self.map, p) for p in self.map.positions()), 1
         )
 
     def check_requirements(self):
         self.contents_match()
         self.test_balanced()
+
+    def test_speed(self):
+        data_structures = [
+            Map_LinearProbing,
+            Map_SeparateChaining,
+            dict,
+            MapTree,
+            AVLMapTree,
+        ]
+        keys = random.sample(range(1000), 1000)
+        for data_structure in data_structures:
+            startTime = time.time()
+            map = data_structure()
+            for key in keys:
+                map[key] = 0
+            if data_structure is AVLMapTree:
+                map.graph()
+            for key in keys:
+                del map[key]
+            endTime = time.time()
+            elapsedTime = endTime - startTime
+            print(f"{data_structure}: {elapsedTime}")
+
+    # height
+
+    def _test_heightDiff(self, map, position):
+        return abs(self._test_rightHeight(map, position) - self._test_leftHeight(map, position))
+    
+    def _test_rightHeight(self, map, position):
+        if map.right(position) is None:
+            return 0
+        else:
+            return self._test_height(map, map.right(position))
+
+    def _test_leftHeight(self, map, position):
+        if map.right(position) is None:
+            return 0
+        else:
+            return self._test_height(map, map.left(position))
+
+    def _test_height(self, map, position):
+        return Tree.height(map, position)
 
 
 if __name__ == "__main__":

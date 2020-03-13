@@ -109,7 +109,7 @@ class Tree(ABC):
             fixedsize="True",
             height="0.5",
             width="0.5",
-            fontsize="9",
+            fontsize="7",
         )
         for position in self.positions():
             graph.node(str(id(position.node)), label=str(position.node.item))

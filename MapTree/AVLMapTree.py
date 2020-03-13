@@ -3,10 +3,19 @@ import itertools as it
 
 
 class AVLMapTree(MapTree):
+    class _Item(MapTree._Item):
+        def __init__(self, key, value):
+            super().__init__(key, value)
+            self._height = 0
+        
+        def __repr__(self):
+            return f"({self._key}, {self._value}, {self._height})"
+
     def _rebalanceSet(self, position):
         walk = walk_1 = walk_2 = position
         while walk != self.root():
             walk, walk_1, walk_2 = self.parent(walk), walk, walk_1
+            self._recalcHeight(walk)
             if self._heightDiff(walk) > 1:
                 return self._trinodeRestructure(walk, walk_1, walk_2)
 
@@ -25,9 +34,11 @@ class AVLMapTree(MapTree):
     def _trinodeRestructure(self, high, mid, low):
         if self._flagDoubleRotation(high, mid, low):
             mid, low = self._rotate(mid, low)
-            self._rotate(high, mid)
+            high, mid = self._rotate(high, mid)
+            self._recalcHeight(low, mid, high)
         else:
-            self._rotate(high, mid)
+            high, mid = self._rotate(high, mid)
+            self._recalcHeight(mid, high)
 
     def _rotate(self, upper, lower):
         subtrees = it.chain.from_iterable(self.children(p) for p in (upper, lower))
@@ -60,6 +71,15 @@ class AVLMapTree(MapTree):
             return False
         else:
             return True
+
+    def _recalcHeight(self, *positions):
+        for position in positions:
+            position.node.item._height = 1 + max(
+                self._rightHeight(position), self._leftHeight(position)
+            )
+
+    def height(self, position):
+        return position.node.item._height
 
     def _heightDiff(self, position):
         return abs(self._rightHeight(position) - self._leftHeight(position))
