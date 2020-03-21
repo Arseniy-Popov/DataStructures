@@ -19,7 +19,7 @@ class TestMap_Base(ABC):
         self.initial_keys = list(ascii_letters[::-1])
 
     def setUp(self):
-        # random.seed(1)
+        # random.seed(5)
         self.initMap()
         self.initKeys()
         self.test_dict = {}
@@ -47,10 +47,10 @@ class TestMap_Base(ABC):
         # self.display_items()
 
     def test_del(self):
-        print(f"\n initial_keys: {self.initial_keys}")
+        print(f"\ninitial_keys: \n{self.initial_keys}")
         self.initial_keys_post_deletion = self.initial_keys
         random.shuffle(self.initial_keys_post_deletion)
-        print(f"deletion keys: {self.initial_keys_post_deletion}")
+        print(f"deletion keys: \n{self.initial_keys_post_deletion}")
         deleted_keys = []
         while len(self.test_dict) > 1:
             key = self.initial_keys_post_deletion.pop(0)

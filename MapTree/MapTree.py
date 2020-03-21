@@ -11,14 +11,15 @@ class MapTree(LinkedBinaryTree, MapBase):
             return self.node.item._value
 
     def _findKey(self, key, current, parent=None):
-        if current is None:
-            return parent
-        if current.key() < key:
-            return self._findKey(key, self.right(current), parent=current)
-        elif current.key() > key:
-            return self._findKey(key, self.left(current), parent=current)
-        elif current.key() == key:
-            return current
+        while True:
+            if current is None:
+                return parent
+            if current.key() < key:
+                current, parent = self.right(current), current
+            elif current.key() > key:
+                current, parent = self.left(current), current
+            elif current.key() == key:
+                return current
 
     def _rightmostInSubtree(self, position):
         """Returns position of the element with the largest key

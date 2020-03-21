@@ -35,10 +35,10 @@ class Test_MapTree(TestMap_Base, unittest.TestCase):
         self.assertEqual(sorted(self.initial_keys), [i for i in self.map])
 
     def test_del(self):
-        print(f"\n initial_keys: {self.initial_keys}")
+        print(f"\ninitial_keys: \n{self.initial_keys}")
         self.initial_keys_post_deletion = self.initial_keys
         random.shuffle(self.initial_keys_post_deletion)
-        print(f"deletion keys: {self.initial_keys_post_deletion}")
+        print(f"deletion keys: \n{self.initial_keys_post_deletion}")
         deleted_keys = []
         while len(self.test_dict) > 1:
             key = self.initial_keys_post_deletion.pop(0)
@@ -87,8 +87,7 @@ class Test_AVLMapTree(Test_MapTree):
     #             self.map[key] = self.test_dict[key] = 0
 
     def test_buildup(self):
-        # random.seed(5)
-        print(f"\n initial_keys: {self.initial_keys}")
+        print(f"\ninitial_keys: {self.initial_keys}")
         self.initMap()
         self.test_dict, previous = {}, None
         for index, key in enumerate(self.initial_keys):
@@ -115,25 +114,30 @@ class Test_AVLMapTree(Test_MapTree):
             MapTree,
             AVLMapTree,
         ]
-        keys = random.sample(range(1000), 1000)
+        # keys = range(5000)
+        keys = random.sample(range(300000), 300000)
         for data_structure in data_structures:
             startTime = time.time()
             map = data_structure()
             for key in keys:
                 map[key] = 0
-            if data_structure is AVLMapTree:
-                map.graph()
             for key in keys:
-                del map[key]
+                map[key]
+            # for key in keys:
+            #     del map[key]
             endTime = time.time()
             elapsedTime = endTime - startTime
-            print(f"{data_structure}: {elapsedTime}")
+            print(f"\n{data_structure}: \n{elapsedTime}")
+            # if data_structure is AVLMapTree:
+            #     map.graph()
 
     # height
 
     def _test_heightDiff(self, map, position):
-        return abs(self._test_rightHeight(map, position) - self._test_leftHeight(map, position))
-    
+        return abs(
+            self._test_rightHeight(map, position) - self._test_leftHeight(map, position)
+        )
+
     def _test_rightHeight(self, map, position):
         if map.right(position) is None:
             return 0
@@ -141,7 +145,7 @@ class Test_AVLMapTree(Test_MapTree):
             return self._test_height(map, map.right(position))
 
     def _test_leftHeight(self, map, position):
-        if map.right(position) is None:
+        if map.left(position) is None:
             return 0
         else:
             return self._test_height(map, map.left(position))

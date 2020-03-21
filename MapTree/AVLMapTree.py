@@ -6,8 +6,8 @@ class AVLMapTree(MapTree):
     class _Item(MapTree._Item):
         def __init__(self, key, value):
             super().__init__(key, value)
-            self._height = 0
-        
+            self._height = 1
+
         def __repr__(self):
             return f"({self._key}, {self._value}, {self._height})"
 
@@ -21,6 +21,7 @@ class AVLMapTree(MapTree):
 
     def _rebalanceDel(self, position):
         while position is not None:
+            self._recalcHeight(position)
             if self._heightDiff(position) > 1:
                 low = mid = high = position
                 while mid == high:
