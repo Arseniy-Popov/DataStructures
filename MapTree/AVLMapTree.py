@@ -33,21 +33,27 @@ class AVLMapTree(MapTree):
             position = self.parent(position)
 
     def _trinodeRestructure(self, high, mid, low):
-        if self._flagDoubleRotation(high, mid, low):
+        if (self.right(mid) == low) == (self.right(high) == mid):
+            high, mid = self._rotate(high, mid)
+            self._recalcHeight(mid, high)
+        else:
             mid, low = self._rotate(mid, low)
             high, mid = self._rotate(high, mid)
             self._recalcHeight(low, mid, high)
-        else:
-            high, mid = self._rotate(high, mid)
-            self._recalcHeight(mid, high)
 
     def _rotate(self, upper, lower):
-        subtrees = it.chain.from_iterable(self.children(p) for p in (upper, lower))
-        subtrees = [s for s in subtrees if s not in (upper, lower)]
-        new_upper = self._addLeaf(self.parent(upper), lower.key(), lower.value())
-        new_lower = self._addLeaf(new_upper, upper.key(), upper.value())
-        self._relinkSubtrees(new_upper, subtrees)
-        return new_upper, new_lower
+        lowerIsLeft = self.left(upper) == lower
+        if self.isRoot(upper):
+            self.relinkSubtree(None, lower)
+        else:
+            upperIsLeft = self.left(self.parent(upper)) == upper
+            self.relinkSubtree(self.parent(upper), lower, left=upperIsLeft)
+        if lowerIsLeft:
+            self.relinkSubtree(upper, self.right(lower), left=True)
+        else:
+            self.relinkSubtree(upper, self.left(lower), left=False)
+        self.relinkSubtree(lower, upper, left=(not lowerIsLeft))
+        return lower, upper
 
     def _relinkSubtrees(self, start, subtrees):
         for subtree in subtrees:
@@ -56,22 +62,6 @@ class AVLMapTree(MapTree):
                 self.relinkSubtree(node, subtree, left=True)
             else:
                 self.relinkSubtree(node, subtree, left=False)
-
-    def _flagDoubleRotation(self, high, mid, low):
-        """ Single rotation if low is either left of left 
-        of high or right of right of high, double rotation otherwise. """
-        try:  # check if left of left
-            flag_left = self.left(self.left(high)) == low
-        except:
-            flag_left = False
-        try:  # check if right of right
-            flag_right = self.right(self.right(high)) == low
-        except:
-            flag_right = False
-        if flag_left or flag_right:  # check if either
-            return False
-        else:
-            return True
 
     def _recalcHeight(self, *positions):
         for position in positions:

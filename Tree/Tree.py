@@ -225,19 +225,26 @@ class LinkedBinaryTree(BinaryTree):
         self.size -= 1
 
     def relinkSubtree(self, position, subtree, left=True):
-        """ Relink subtree starting with the 'tree' node to be a child
+        """ Relink subtree starting with the 'subtree' node to be a child
         of the 'position' node. """
+        if subtree is None:
+            return
         # clear old parent of subtree of child
-        if subtree.node.parent.left == subtree.node:
-            subtree.node.parent.left = None
-        elif subtree.node.parent.right == subtree.node:
-            subtree.node.parent.right = None
+        if subtree.node.parent is not None:
+            if subtree.node.parent.left == subtree.node:
+                subtree.node.parent.left = None
+            elif subtree.node.parent.right == subtree.node:
+                subtree.node.parent.right = None
         # attach subtree to new parent
-        subtree.node.parent = position.node
-        if left:
-            position.node.left = subtree.node
+        if position is None:  # set the subtree node as root
+            subtree.node.parent = None
+            self._root = subtree.node
         else:
-            position.node.right = subtree.node
+            subtree.node.parent = position.node
+            if left:
+                position.node.left = subtree.node
+            else:
+                position.node.right = subtree.node
 
     # ACCESORS
 

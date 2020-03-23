@@ -115,7 +115,7 @@ class Test_AVLMapTree(Test_MapTree):
             AVLMapTree,
         ]
         # keys = range(5000)
-        keys = random.sample(range(300000), 300000)
+        keys = random.sample(range(1000), 1000)
         for data_structure in data_structures:
             startTime = time.time()
             map = data_structure()
