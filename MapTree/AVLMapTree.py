@@ -12,24 +12,20 @@ class AVLMapTree(MapTree):
             return f"({self._key}, {self._value}, {self._height})"
 
     def _rebalanceSet(self, position):
-        walk = walk_1 = walk_2 = position
-        while walk != self.root():
-            walk, walk_1, walk_2 = self.parent(walk), walk, walk_1
-            self._recalcHeight(walk)
-            if self._heightDiff(walk) > 1:
-                return self._trinodeRestructure(walk, walk_1, walk_2)
+        self._rebalance(position)
 
     def _rebalanceDel(self, position):
+        self._rebalance(position)
+
+    def _rebalance(self, position):
         while position is not None:
             self._recalcHeight(position)
             if self._heightDiff(position) > 1:
-                low = mid = high = position
-                while mid == high:
-                    if self._rightHeight(low) >= self._leftHeight(low):
-                        low, mid, high = self.right(low), low, mid
-                    else:
-                        low, mid, high = self.left(low), low, mid
-                self._trinodeRestructure(high, mid, low)
+                self._trinodeRestructure(
+                    position,
+                    self._tallestChild(position),
+                    self._tallestGrandChild(position),
+                )
             position = self.parent(position)
 
     def _trinodeRestructure(self, high, mid, low):
@@ -55,13 +51,14 @@ class AVLMapTree(MapTree):
         self.relinkSubtree(lower, upper, left=(not lowerIsLeft))
         return lower, upper
 
-    def _relinkSubtrees(self, start, subtrees):
-        for subtree in subtrees:
-            node = self._findKey(subtree.key(), start)
-            if subtree.key() < node.key():
-                self.relinkSubtree(node, subtree, left=True)
-            else:
-                self.relinkSubtree(node, subtree, left=False)
+    def _tallestChild(self, position):
+        if self._rightHeight(position) >= self._leftHeight(position):
+            return self.right(position)
+        else:
+            return self.left(position)
+
+    def _tallestGrandChild(self, position):
+        return self._tallestChild(self._tallestChild(position))
 
     def _recalcHeight(self, *positions):
         for position in positions:
