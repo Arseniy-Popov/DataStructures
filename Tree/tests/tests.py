@@ -1,7 +1,8 @@
-import unittest
 import shutil
-from DataStructures.Tree.Tree import LinkedBinaryTree
+import unittest
+
 from DataStructures.Tree.toc import tOfContents
+from DataStructures.Tree.Tree import LinkedBinaryTree
 
 
 class test_BinaryTree(unittest.TestCase):

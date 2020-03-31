@@ -1,13 +1,13 @@
-import unittest
 import random
 import shutil
 import time
+import unittest
 
-from DataStructures.Map.tests import TestMap_Base
 from DataStructures.Map.Map_LinearProbing import Map_LinearProbing
 from DataStructures.Map.Map_SeparateChaining import Map_SeparateChaining
-from DataStructures.MapTree.MapTree import MapTree
+from DataStructures.Map.tests import TestMap_Base
 from DataStructures.MapTree.AVLMapTree import AVLMapTree
+from DataStructures.MapTree.MapTree import MapTree
 from DataStructures.Tree.Tree import Tree
 
 

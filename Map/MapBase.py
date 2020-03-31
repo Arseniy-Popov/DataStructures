@@ -1,5 +1,5 @@
-from collections import MutableMapping
 from abc import abstractmethod
+from collections import MutableMapping
 
 
 class MapBase(MutableMapping):

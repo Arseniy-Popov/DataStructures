@@ -1,5 +1,6 @@
-from PositionalList.PositionalList import PositionalList
 from abc import ABC, abstractmethod
+
+from PositionalList.PositionalList import PositionalList
 
 
 class PriorityQueueBase(ABC):

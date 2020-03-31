@@ -1,7 +1,8 @@
-from graphviz import Digraph
+import datetime
 from abc import ABC, abstractmethod
 from collections import deque
-import datetime
+
+from graphviz import Digraph
 
 
 class Tree(ABC):

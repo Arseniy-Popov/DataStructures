@@ -1,5 +1,6 @@
-from DataStructures.MapTree.MapTree import MapTree
 import itertools as it
+
+from DataStructures.MapTree.MapTree import MapTree
 
 
 class AVLMapTree(MapTree):
@@ -19,13 +20,16 @@ class AVLMapTree(MapTree):
 
     def _rebalance(self, position):
         while position is not None:
+            oldHeight = self.height(position)
             self._recalcHeight(position)
             if self._heightDiff(position) > 1:
-                self._trinodeRestructure(
+                position = self._trinodeRestructure(
                     position,
                     self._tallestChild(position),
                     self._tallestGrandChild(position),
                 )
+            if self.height(position) == oldHeight and not self.isLeaf(position):
+                break
             position = self.parent(position)
 
     def _trinodeRestructure(self, high, mid, low):
@@ -36,6 +40,7 @@ class AVLMapTree(MapTree):
             mid, low = self._rotate(mid, low)
             high, mid = self._rotate(high, mid)
             self._recalcHeight(low, mid, high)
+        return high
 
     def _rotate(self, upper, lower):
         lowerIsLeft = self.left(upper) == lower
