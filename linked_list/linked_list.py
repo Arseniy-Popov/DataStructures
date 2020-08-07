@@ -5,6 +5,8 @@ class LinkedList(collections.abc.Sequence):
     """
     Doubly linked list supporting constant time insertions
     and deletions.
+    
+    Provides the .append, .prepend, .delete
     """
     class Node:
         def __init__(self, item, next=None, prev=None, container=None):

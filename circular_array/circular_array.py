@@ -1,7 +1,7 @@
 import collections.abc
 
 
-class Deque(collections.abc.Sequence):
+class CircularArray(collections.abc.Sequence):
     """
     Double-ended queue supporting constant time insertions and deletions
     on either end as well as constant time indexing.
@@ -17,10 +17,12 @@ class Deque(collections.abc.Sequence):
 
     # Private utilities
 
-    def _getArrayIndex(self, index):
+    def _arrayIndex(self, index):
         """
-        Get index of the underlying circular array
-        corresponding to the perceived deque index.  
+        Get index of the underlying array corresponding to the
+        perceived element index. Negative index points to the
+        left of the _headIndex, not to the left of the end of
+        the array.
         """
         return (self._headIndex + index) % len(self._array)
 
@@ -40,16 +42,23 @@ class Deque(collections.abc.Sequence):
         self._array = newArray
         self._headIndex = 0
 
+    def _indexPositive(self, index):
+        """
+        Turns the negative index used to denote position
+        relative to the end of the array into a positive one.
+        """
+        return index if index >= 0 else len(self) + index
+
     # Accessor methods
 
     def __len__(self):
         return self._len
 
     def __getitem__(self, index):
-        index = index if index >= 0 else len(self) + index
+        index = self._indexPositive(index)
         if not 0 <= index < len(self):
             raise IndexError
-        return self._array[self._getArrayIndex(index)]
+        return self._array[self._arrayIndex(index)]
 
     def __repr__(self):
         return f"<Deque {[i for i in self]}>"
@@ -65,24 +74,46 @@ class Deque(collections.abc.Sequence):
                 self.append(item)
 
     def __setitem__(self, index, value):
-        self._array[self._getArrayIndex(index)] = value
+        index = self._indexPositive(index)
+        self._array[self._arrayIndex(index)] = value
 
-    def _append(self, value, left=False):
-        self._resize()
-        if left:
-            index = -1
+    def _shift(self, fromIndex, toIndex):
+        self._array[self._arrayIndex(fromIndex)] = self._array[
+            self._arrayIndex(toIndex)
+        ]
+
+    def __delitem__(self, index):
+        index = self._indexPositive(index)
+        if index < len(self) // 2:
+            for i in range(index, 0, -1):
+                self._shift(i-1, i)
+            self._headIndex = (self._headIndex + 1) % len(self._array)
         else:
-            index = len(self)
-        self._array[self._getArrayIndex(index)] = value
+            for i in range(i, len(self)-1):
+                self._shift(i+1, i)
+        self._len -= 1
+
+    def insert(self, index, value):
+        """
+        Insert value before index.
+        """
+        self._resize()
+        index = self._indexPositive(index)
+        if index < len(self) // 2:
+            for i in range(index):
+                self._shift(i - 1, i)
+            self._headIndex = (self._headIndex + 1) % len(self._array)
+        else:
+            for i in range(len(self) - 1, index - 1, -1):
+                self._shift(i + 1, i)
+        self._array[self._arrayIndex(index)] = value
         self._len += 1
-        if left:
-            self._headIndex = (self._headIndex - 1) % len(self._array)
 
     def append(self, value):
-        self._append(value)
+        self.insert(len(self), value)
 
     def appendLeft(self, value):
-        self._append(value, left=True)
+        self.insert(0, value)
 
     def _pop(self, left=False):
         if not len(self):
@@ -92,14 +123,15 @@ class Deque(collections.abc.Sequence):
             index = 0
         else:
             index = len(self) - 1
-        toPop = self._array[self._getArrayIndex(index)]
-        self._array[self._getArrayIndex(index)] = None
+        toPop = self._array[self._arrayIndex(index)]
+        self._array[self._arrayIndex(index)] = None
         self._len -= 1
         if left:
             self._headIndex = (self._headIndex + 1) % len(self._array)
         return toPop
 
     def pop(self):
+        item = self[-1]
         return self._pop()
 
     def popLeft(self):
