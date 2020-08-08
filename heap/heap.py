@@ -1,4 +1,7 @@
-class Heap:
+from collections.abc import Container, Sized
+
+
+class Heap(Container, Sized):
     """
     Priority queue implemented with the heap data structure.
     Allows for retrieval of the smallest element and insertions
@@ -6,10 +9,15 @@ class Heap:
     access. Ordering of the elements can be customized with the
     optional 'key' callable. Comparisons utilize the __lt__ method.
     
-    Provides the .push, .peek, .pop, __len__, and __repr__ methods.
+    Provides the .push, .peek, .pop, __len__, __contains__,
+    and __repr__ methods.
     """
 
     class _Item:
+        """
+        Used to populate the underlying storage array with pairs
+        of items and keys so that keys are cached.
+        """
         def __init__(self, item, key=None):
             self._item = item
             self._key = key
@@ -26,8 +34,11 @@ class Heap:
     def __len__(self):
         return len(self._array)
 
+    def __contains__(self, item):
+        return any(x._item == item for x in self._array) 
+
     def __repr__(self):
-        return f"<Heap {self._array}>"
+        return f"<Heap of lenght {len(self)}, min: {self.peek()}>"
 
     def push(self, item):
         self._array.append(self._Item(item, key=self._key(item)))
@@ -72,8 +83,6 @@ class Heap:
     def _min_child(self, index):
         if self._left_child(index) is None and self._right_child(index) is None:
             return None
-        elif self._left_child(index) is None:
-            return self._right_child(index)
         elif self._right_child(index) is None:
             return self._left_child(index)
         else:

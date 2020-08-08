@@ -4,7 +4,7 @@ import collections.abc
 class LinkedList(collections.abc.Sequence):
     """
     Doubly linked list supporting constant time insertions
-    and deletions.
+    and deletions at any location.
     
     Provides the .append, .prepend, .delete
     """

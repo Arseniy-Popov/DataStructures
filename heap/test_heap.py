@@ -7,7 +7,7 @@ from heap import Heap
 class TestHeap(unittest.TestCase):
     def setUp(self):
         self.heap = Heap()
-        self.items = random.choices(range(100), k=10)
+        self.items = random.choices(range(100), k=30)
 
     def test_push_peek(self):
         items = []
@@ -15,6 +15,10 @@ class TestHeap(unittest.TestCase):
             self.heap.push(i)
             items.append(i)
             self.assertEqual(min(items), self.heap.peek())
+
+    def test_peek(self):
+        with self.assertRaises(IndexError):
+            self.heap.peek()
 
     def test_pop(self):
         items = self.items
@@ -37,6 +41,30 @@ class TestHeap(unittest.TestCase):
             for i in range(n):
                 self.heap.pop()
                 self.assertEqual(len(self.heap), n-i-1)
+    
+    def test_contains(self):
+        items = []
+        for i in self.items:
+            self.heap.push(i)
+            items.append(i) 
+            for j in items:
+                self.assertEqual(j in self.heap, True)
+    
+    def test_repr(self):
+        items = []
+        for i in self.items:
+            self.heap.push(i)
+            items.append(i)
+        length, min_ = len(items), min(items)
+        self.assertEqual(str(self.heap), f"<Heap of lenght {length}, min: {min_}>")
+        
+    def test_key(self):
+        heap = Heap(lambda x: -x)
+        items = []
+        for i in self.items:
+            heap.push(i)
+            items.append(i)
+            self.assertEqual(heap.peek(), max(items))
             
             
 if __name__ == "__main__":

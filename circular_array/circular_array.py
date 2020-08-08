@@ -1,17 +1,17 @@
-import collections.abc
+from collections.abc import MutableSequence
 
 
-class CircularArray(collections.abc.MutableSequence):
+class CircularArray(MutableSequence):
     """
-    Array supporting constant time insertions and deletions
-    on either end as well as constant time indexing.
+    Array supporting constant time insertions and deletions on either end
+    as well as constant time indexing. Insertions and deletions not at the
+    endpoints are of linear complexity proportional to distance to the
+    closest endpoint.
     
-    Insertions and deletions 
-    
-    Provides the .append, .appendLeft, .pop, .popLeft, __len__, __getitem__,
-    __setitem__, __delitem__, and .insert methods by itself, and inherits
-    __contains__, __iter__, __reversed__, .index, .count, .reverse, .extend,
-    .remove, and __iadd__ from the collections.abc.MutableSequence abstract
+    Provides the __getitem__, __setitem__, __delitem__, __len__, .append,
+    .appendLeft, .pop, .popLeft, and .insert methods by itself, and inherits
+    __contains__, __iter__, __reversed__, __iadd__, .index, .count, .reverse,
+    .extend, and .remove from the collections.abc.MutableSequence abstract
     base class.
     """
 
@@ -76,6 +76,9 @@ class CircularArray(collections.abc.MutableSequence):
     # Modifier methods
 
     def __init__(self, iterable=None):
+        """
+        Accepts an optional iterable to prepopulate the array with.
+        """
         self._array = self._initialSize * [None]
         self._headIndex = 0
         self._len = 0
@@ -88,19 +91,19 @@ class CircularArray(collections.abc.MutableSequence):
         self._array[self._arrayIndex(index)] = value
 
     def _shift(self, fromIndex, toIndex):
-        self._array[self._arrayIndex(fromIndex)] = self._array[
-            self._arrayIndex(toIndex)
+        self._array[self._arrayIndex(toIndex)] = self._array[
+            self._arrayIndex(fromIndex)
         ]
 
     def __delitem__(self, index):
         index = self._validate(self._indexPositive(index))
         if index < len(self) // 2:
             for i in range(index, 0, -1):
-                self._shift(i-1, i)
+                self._shift(i - 1, i)
             self._headIndex = (self._headIndex + 1) % len(self._array)
         else:
-            for i in range(index, len(self)-1):
-                self._shift(i+1, i)
+            for i in range(index, len(self) - 1):
+                self._shift(i + 1, i)
         self._len -= 1
         self._resize()
 
@@ -113,11 +116,11 @@ class CircularArray(collections.abc.MutableSequence):
         index = min(len(self), index)
         if index < len(self) // 2:
             for i in range(index):
-                self._shift(i - 1, i)
+                self._shift(i, i - 1)
             self._headIndex = (self._headIndex - 1) % len(self._array)
         else:
             for i in range(len(self) - 1, index - 1, -1):
-                self._shift(i + 1, i)
+                self._shift(i, i + 1)
         self._array[self._arrayIndex(index)] = value
         self._len += 1
 
@@ -134,12 +137,18 @@ class CircularArray(collections.abc.MutableSequence):
         self.insert(0, value)
 
     def pop(self, index=None):
+        """
+        Remove and return value at index, default last.
+        """
         index = index or -1
         item = self[index]
         del self[-1]
         return item
 
     def popLeft(self):
+        """
+        Remove and return first value.
+        """
         item = self[0]
         del self[0]
         return item
