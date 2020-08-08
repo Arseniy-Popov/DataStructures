@@ -1,14 +1,18 @@
 import collections.abc
 
 
-class CircularArray(collections.abc.Sequence):
+class CircularArray(collections.abc.MutableSequence):
     """
-    Double-ended queue supporting constant time insertions and deletions
+    Array supporting constant time insertions and deletions
     on either end as well as constant time indexing.
     
-    Provides the .append, .appendLeft, .pop, .popLeft, __len__, and __getitem__
-    methods by itself, and inherits __contains__, __iter__, __reversed__,
-    .index, and .count from the collections.abc.Sequence abstract base class.
+    Insertions and deletions 
+    
+    Provides the .append, .appendLeft, .pop, .popLeft, __len__, __getitem__,
+    __setitem__, __delitem__, and .insert methods by itself, and inherits
+    __contains__, __iter__, __reversed__, .index, .count, .reverse, .extend,
+    .remove, and __iadd__ from the collections.abc.MutableSequence abstract
+    base class.
     """
 
     _initialSize = 10
@@ -49,15 +53,21 @@ class CircularArray(collections.abc.Sequence):
         """
         return index if index >= 0 else len(self) + index
 
+    def _validate(self, index):
+        """
+        Validate the index is within the acceptable range.
+        """
+        if not 0 <= index < len(self):
+            raise IndexError
+        return index
+
     # Accessor methods
 
     def __len__(self):
         return self._len
 
     def __getitem__(self, index):
-        index = self._indexPositive(index)
-        if not 0 <= index < len(self):
-            raise IndexError
+        index = self._validate(self._indexPositive(index))
         return self._array[self._arrayIndex(index)]
 
     def __repr__(self):
@@ -74,7 +84,7 @@ class CircularArray(collections.abc.Sequence):
                 self.append(item)
 
     def __setitem__(self, index, value):
-        index = self._indexPositive(index)
+        index = self._validate(self._indexPositive(index))
         self._array[self._arrayIndex(index)] = value
 
     def _shift(self, fromIndex, toIndex):
@@ -83,15 +93,16 @@ class CircularArray(collections.abc.Sequence):
         ]
 
     def __delitem__(self, index):
-        index = self._indexPositive(index)
+        index = self._validate(self._indexPositive(index))
         if index < len(self) // 2:
             for i in range(index, 0, -1):
                 self._shift(i-1, i)
             self._headIndex = (self._headIndex + 1) % len(self._array)
         else:
-            for i in range(i, len(self)-1):
+            for i in range(index, len(self)-1):
                 self._shift(i+1, i)
         self._len -= 1
+        self._resize()
 
     def insert(self, index, value):
         """
@@ -99,10 +110,11 @@ class CircularArray(collections.abc.Sequence):
         """
         self._resize()
         index = self._indexPositive(index)
+        index = min(len(self), index)
         if index < len(self) // 2:
             for i in range(index):
                 self._shift(i - 1, i)
-            self._headIndex = (self._headIndex + 1) % len(self._array)
+            self._headIndex = (self._headIndex - 1) % len(self._array)
         else:
             for i in range(len(self) - 1, index - 1, -1):
                 self._shift(i + 1, i)
@@ -110,29 +122,24 @@ class CircularArray(collections.abc.Sequence):
         self._len += 1
 
     def append(self, value):
+        """
+        Append value to the end of the sequence.
+        """
         self.insert(len(self), value)
 
     def appendLeft(self, value):
+        """
+        Append value to the front of the sequence.
+        """
         self.insert(0, value)
 
-    def _pop(self, left=False):
-        if not len(self):
-            raise IndexError("pop from empty array")
-        self._resize()
-        if left:
-            index = 0
-        else:
-            index = len(self) - 1
-        toPop = self._array[self._arrayIndex(index)]
-        self._array[self._arrayIndex(index)] = None
-        self._len -= 1
-        if left:
-            self._headIndex = (self._headIndex + 1) % len(self._array)
-        return toPop
-
-    def pop(self):
-        item = self[-1]
-        return self._pop()
+    def pop(self, index=None):
+        index = index or -1
+        item = self[index]
+        del self[-1]
+        return item
 
     def popLeft(self):
-        return self._pop(left=True)
+        item = self[0]
+        del self[0]
+        return item
