@@ -13,6 +13,10 @@ class CircularArray(MutableSequence):
     __contains__, __iter__, __reversed__, __iadd__, .index, .count, .reverse,
     .extend, and .remove from the collections.abc.MutableSequence abstract
     base class.
+    
+    This implementation does not seem to provide any practical benefits
+    over the built-in list type even in the case of appends to the front
+    of the array, despite the supposedly improved time complexity.
     """
 
     _initialSize = 10
@@ -20,6 +24,9 @@ class CircularArray(MutableSequence):
     _shrinkThreshold = 0.5
 
     # Private utilities
+
+    def _createArray(self, length):
+        return length * [None]
 
     def _arrayIndex(self, index):
         """
@@ -34,11 +41,11 @@ class CircularArray(MutableSequence):
         shrinkIfSmaller = self._shrinkThreshold * len(self._array) / self._resizeFactor
         postShrinkSize = len(self._array) / self._resizeFactor
         if len(self) == len(self._array):  # expand array
-            newArray = len(self._array) * self._resizeFactor * [None]
+            newArray = self._createArray(len(self._array) * self._resizeFactor)
         elif (
             len(self) <= shrinkIfSmaller and postShrinkSize >= self._initialSize
         ):  # shrink array
-            newArray = int(len(self._array) / self._resizeFactor) * [None]
+            newArray = self._createArray(int(len(self._array) / self._resizeFactor))
         else:  # no resize
             return
         for index, value in enumerate(self):
@@ -79,7 +86,7 @@ class CircularArray(MutableSequence):
         """
         Accepts an optional iterable to prepopulate the array with.
         """
-        self._array = self._initialSize * [None]
+        self._array = self._createArray(self._initialSize)
         self._headIndex = 0
         self._len = 0
         if iterable:

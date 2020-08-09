@@ -1,13 +1,26 @@
-import collections.abc
+from collections.abc import Container, Sized
 
 
-class LinkedList(collections.abc.Sequence):
+class LinkedList(Container, Sized):
     """
     Doubly linked list supporting constant time insertions
-    and deletions at any location.    
+    and deletions at any location.
+    
+    Mosth of the methods accepts and/or return instances of
+    LinkedList.Node, although __contains__ and .index
+    accept items which should be contained at nodes.
+    
+    Internally, two sentinel nodes, _head and _tail, are 
+    always present to simplify operations at endpoints,
+    though this is not revealed to the user.
     """
 
     class Node:
+        """
+        Contained item is at .item. The node should not be 
+        initailized by itself. Instead, use the appripriate
+        modifying method of the LinkedList. 
+        """
         def __init__(self, item, next=None, prev=None, container=None):
             self._next = next
             self._prev = prev
@@ -23,9 +36,15 @@ class LinkedList(collections.abc.Sequence):
             return node
 
         def next(self):
+            """
+            Returns the next node or None.
+            """
             return self._validateNode(self._next)
 
         def prev(self):
+            """
+            Returns the previous node or None.
+            """
             return self._validateNode(self._prev)
 
     # Modifier methods
@@ -42,7 +61,7 @@ class LinkedList(collections.abc.Sequence):
     def _link(self, preceding, following):
         preceding._next, following._prev = following, preceding
 
-    def append(self, item, prev=None):
+    def append(self, item, prev=None) -> None:
         """
         Insert item after the 'prev' node or to the end if no node is given.
         """
@@ -60,6 +79,9 @@ class LinkedList(collections.abc.Sequence):
         self.append(item, prev=next._prev)
 
     def delete(self, node):
+        """
+        Delete node.
+        """
         prev, next = node._prev, node._next
         self._link(prev, next)
         self._len -= 1
@@ -70,19 +92,22 @@ class LinkedList(collections.abc.Sequence):
     def __len__(self):
         return self._len
 
-    def __getitem__(self, key):
-        if not isinstance(key, int):
+    def __getitem__(self, index):
+        """
+        Returns node at given index.
+        """
+        if not isinstance(index, int):
             raise TypeError
-        key = key if key >= 0 else len(self) + key
-        if not 0 <= key <= len(self) - 1:
+        index = index if index >= 0 else len(self) + index
+        if not 0 <= index <= len(self) - 1:
             raise IndexError
-        if key > len(self) / 2:
+        if index > len(self) / 2:
             for count, node in enumerate(reversed(self)):
-                if len(self) - count - 1 == key:
+                if len(self) - count - 1 == index:
                     return node
         else:
             for count, node in enumerate(self):
-                if count == key:
+                if count == index:
                     return node
 
     def _iter(self, direction, start):
@@ -92,9 +117,15 @@ class LinkedList(collections.abc.Sequence):
             node = getattr(node, direction)()
 
     def __iter__(self):
+        """
+        Iterate over the nodes of the list.
+        """
         return self._iter(start=self._head, direction="next")
 
     def __reversed__(self):
+        """
+        Iterate over the nodes of the list in reverse.
+        """
         return self._iter(start=self._tail, direction="prev")
 
     def __contains__(self, item):

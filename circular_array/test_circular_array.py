@@ -1,3 +1,4 @@
+import time
 import unittest
 
 from circular_array import CircularArray
@@ -85,6 +86,21 @@ class TestCircularArray(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual(str(self.array), f"<Deque {self.data}>")
+
+    def test_speed(self):
+        k = 1000
+        array, list = CircularArray(), []
+        start_array = time.time()
+        for i in range(k):
+            array.insert(0, i)
+        end_array = time.time()
+        start_list = time.time()
+        for i in range(k):
+            list.insert(0, k)
+        end_list = time.time()
+        print("\n")
+        print(f"array time: {round(end_array-start_array, 4)}")
+        print(f"list time: {round(end_list-start_list, 4)}")
 
 
 if __name__ == "__main__":
