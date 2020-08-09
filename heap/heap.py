@@ -18,6 +18,7 @@ class Heap(Container, Sized):
         Used to populate the underlying storage array with pairs
         of items and keys so that keys are cached.
         """
+
         def __init__(self, item, key=None):
             self._item = item
             self._key = key
@@ -35,7 +36,7 @@ class Heap(Container, Sized):
         return len(self._array)
 
     def __contains__(self, item):
-        return any(x._item == item for x in self._array) 
+        return any(x._item == item for x in self._array)
 
     def __repr__(self):
         return f"<Heap of lenght {len(self)}, min: {self.peek()}>"

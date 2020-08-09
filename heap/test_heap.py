@@ -33,23 +33,23 @@ class TestHeap(unittest.TestCase):
         with self.subTest("push"):
             for i in range(n):
                 self.heap.push(1)
-                self.assertEqual(len(self.heap), i+1)
+                self.assertEqual(len(self.heap), i + 1)
         with self.subTest("peek"):
             self.heap.peek()
             self.assertEqual(len(self.heap), n)
         with self.subTest("pop"):
             for i in range(n):
                 self.heap.pop()
-                self.assertEqual(len(self.heap), n-i-1)
-    
+                self.assertEqual(len(self.heap), n - i - 1)
+
     def test_contains(self):
         items = []
         for i in self.items:
             self.heap.push(i)
-            items.append(i) 
+            items.append(i)
             for j in items:
                 self.assertEqual(j in self.heap, True)
-    
+
     def test_repr(self):
         items = []
         for i in self.items:
@@ -57,7 +57,7 @@ class TestHeap(unittest.TestCase):
             items.append(i)
         length, min_ = len(items), min(items)
         self.assertEqual(str(self.heap), f"<Heap of lenght {length}, min: {min_}>")
-        
+
     def test_key(self):
         heap = Heap(lambda x: -x)
         items = []
@@ -65,7 +65,7 @@ class TestHeap(unittest.TestCase):
             heap.push(i)
             items.append(i)
             self.assertEqual(heap.peek(), max(items))
-            
-            
+
+
 if __name__ == "__main__":
     unittest.main()

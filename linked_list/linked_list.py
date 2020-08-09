@@ -8,6 +8,7 @@ class LinkedList(collections.abc.Sequence):
     
     Provides the .append, .prepend, .delete
     """
+
     class Node:
         def __init__(self, item, next=None, prev=None, container=None):
             self._next = next

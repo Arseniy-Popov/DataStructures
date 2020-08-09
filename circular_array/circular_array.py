@@ -3,10 +3,10 @@ from collections.abc import MutableSequence
 
 class CircularArray(MutableSequence):
     """
-    Array supporting constant time insertions and deletions on either end
-    as well as constant time indexing. Insertions and deletions not at the
-    endpoints are of linear complexity proportional to distance to the
-    closest endpoint.
+    Array supporting amortized constant time insertions and deletions on
+    either end as well as constant time indexing. Insertions and deletions
+    not at the endpoints are of linear complexity proportional to distance
+    to the closest endpoint.
     
     Provides the __getitem__, __setitem__, __delitem__, __len__, .append,
     .appendLeft, .pop, .popLeft, and .insert methods by itself, and inherits

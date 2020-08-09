@@ -45,7 +45,7 @@ class TestCircularArray(unittest.TestCase):
             self._compare_contents()
 
     def test_append_right(self):
-        for i in range(self.array._initialSize+1):
+        for i in range(self.array._initialSize + 1):
             self._call_method("append", i)
             self._compare_contents()
 
